@@ -52,7 +52,7 @@ const ImageSetPage = () => {
   const [cuts, setCuts] = useState<Cut[]>(mockCuts);
   const [allGenerated, setAllGenerated] = useState(false);
   const [selectedFrames, setSelectedFrames] = useState<string[]>([]);
-  const [zoomLevel, setZoomLevel] = useState(25); // Start with smaller zoom to fit more images
+  const [zoomLevel, setZoomLevel] = useState(17); // Default to show 6 images per row
   const [uploadedImage, setUploadedImage] = useState<string>();
   
   // Edit modal state

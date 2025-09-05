@@ -85,82 +85,139 @@ const EditModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden">
+      <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden bg-gradient-to-br from-background via-background to-muted/20">
         <DialogHeader>
-          <DialogTitle>Edit Image</DialogTitle>
+          <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+            Edit Image
+          </DialogTitle>
         </DialogHeader>
         
-        <div className="flex flex-col gap-6 h-[70vh]">
-          {/* Center - Current/Edited image with side buttons */}
-          <div className="flex gap-4">
-            <div className="flex-1 bg-muted rounded-lg flex items-center justify-center overflow-hidden">
-              {currentImage ? (
-                <img 
-                  src={currentImage} 
-                  alt="Current" 
-                  className="max-w-full max-h-full object-contain"
-                />
-              ) : (
-                <div className="text-muted-foreground">No current image</div>
-              )}
-            </div>
-            
-            {/* Side buttons */}
-            <div className="flex flex-col gap-2 justify-center">
-              <Button onClick={() => onRetry?.()}>
-                Retry
-              </Button>
-              <Button onClick={() => console.log("Download")}>
-                Download
-              </Button>
-              <Button variant="outline" onClick={() => console.log("Share")}>
-                Share
-              </Button>
-              <Button onClick={() => console.log("Confirm")}>
-                Confirm
-              </Button>
-            </div>
+        <div className="flex gap-6 h-[75vh]">
+          {/* Left - History */}
+          <div className="w-64 bg-card/50 backdrop-blur-sm rounded-xl border border-border/50 p-4">
+            <h3 className="text-sm font-semibold text-muted-foreground mb-4 uppercase tracking-wide">History</h3>
+            <ScrollArea className="h-full">
+              <div className="space-y-3">
+                {mockHistory.map((item) => (
+                  <div 
+                    key={item.id} 
+                    className="group cursor-pointer bg-muted/30 hover:bg-muted/60 rounded-lg p-3 transition-all duration-200 hover:scale-[1.02]"
+                  >
+                    <div className="aspect-square bg-muted rounded-md mb-2 overflow-hidden">
+                      <img 
+                        src={item.imageUrl} 
+                        alt="History" 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <p className="text-xs text-muted-foreground truncate">{item.prompt}</p>
+                    <p className="text-xs text-muted-foreground/60">
+                      {item.timestamp.toLocaleTimeString()}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
           </div>
-          
-          {/* Bottom - Tags and Inputs */}
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium mb-2 block">Tags</label>
-              <div className="flex flex-wrap gap-2 mb-2">
+
+          {/* Right - Main editing area */}
+          <div className="flex-1 space-y-6">
+            {/* Image display with action buttons */}
+            <div className="bg-card/30 backdrop-blur-sm rounded-xl border border-border/50 p-6">
+              <div className="flex gap-6">
+                {/* Image */}
+                <div className="flex-1 bg-muted/30 rounded-xl flex items-center justify-center overflow-hidden aspect-square max-w-md">
+                  {currentImage ? (
+                    <img 
+                      src={currentImage} 
+                      alt="Current" 
+                      className="max-w-full max-h-full object-contain"
+                    />
+                  ) : (
+                    <div className="text-muted-foreground">No current image</div>
+                  )}
+                </div>
+                
+                {/* Action buttons */}
+                <div className="flex flex-col gap-3 justify-center">
+                  <Button 
+                    onClick={() => console.log("Confirm")}
+                    className="px-6 py-3 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground"
+                  >
+                    确认
+                  </Button>
+                  <Button 
+                    onClick={() => onDownload?.()}
+                    variant="outline"
+                    className="px-6 py-3 border-primary/30 hover:bg-primary/10"
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    下载
+                  </Button>
+                  <Button 
+                    onClick={() => console.log("Share")}
+                    variant="outline"
+                    className="px-6 py-3"
+                  >
+                    分享
+                  </Button>
+                  <Button 
+                    onClick={() => onRetry?.()}
+                    variant="outline"
+                    className="px-6 py-3"
+                  >
+                    <RotateCcw className="w-4 h-4 mr-2" />
+                    重试
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            {/* Tags section */}
+            <div className="bg-card/30 backdrop-blur-sm rounded-xl border border-border/50 p-6">
+              <Label className="text-sm font-semibold text-foreground mb-3 block uppercase tracking-wide">Tags</Label>
+              <div className="flex flex-wrap gap-2 mb-4">
                 {editTags.map((tag, index) => (
                   <button
                     key={index}
                     onClick={() => handleRemoveTag(tag)}
-                    className="px-2 py-1 bg-primary/20 text-primary text-xs rounded-full hover:bg-primary/30 transition-colors flex items-center gap-1"
+                    className="px-3 py-1.5 bg-primary/20 hover:bg-primary/30 text-primary text-sm rounded-full transition-all duration-200 flex items-center gap-2 hover:scale-105"
                   >
                     {tag}
                     <X className="w-3 h-3" />
                   </button>
                 ))}
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-3">
                 <Input
                   placeholder="Add tag..."
                   value={newTag}
                   onChange={(e) => setNewTag(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  className="text-sm"
+                  className="bg-background/50 border-border/50 focus:border-primary/50"
                 />
-                <Button size="sm" onClick={handleAddTag}>
+                <Button size="sm" onClick={handleAddTag} className="px-4">
                   <Plus className="w-4 h-4" />
                 </Button>
               </div>
             </div>
             
-            <div>
-              <label className="text-sm font-medium mb-2 block">Prompt</label>
-              <textarea 
+            {/* Prompt section */}
+            <div className="bg-card/30 backdrop-blur-sm rounded-xl border border-border/50 p-6">
+              <Label className="text-sm font-semibold text-foreground mb-3 block uppercase tracking-wide">Prompt</Label>
+              <Textarea 
                 value={editPrompt}
                 onChange={(e) => setEditPrompt(e.target.value)}
                 placeholder="Describe how you'd like to modify the image..."
-                rows={3}
-                className="w-full px-3 py-2 bg-input border border-border rounded-md resize-none"
+                rows={4}
+                className="bg-background/50 border-border/50 focus:border-primary/50 resize-none"
               />
+              <Button 
+                onClick={handleApplyEdit}
+                className="w-full mt-4 py-3 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-semibold"
+              >
+                Apply Edit
+              </Button>
             </div>
           </div>
         </div>
