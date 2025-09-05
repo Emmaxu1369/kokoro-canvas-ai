@@ -50,10 +50,9 @@ const mockCuts: Cut[] = [
 
 const ImageSetPage = () => {
   const [cuts, setCuts] = useState<Cut[]>(mockCuts);
-  const [globalGenerated, setGlobalGenerated] = useState(false);
+  const [allGenerated, setAllGenerated] = useState(false);
   const [selectedFrames, setSelectedFrames] = useState<string[]>([]);
-  const [previewMode, setPreviewMode] = useState(false);
-  const [zoomLevel, setZoomLevel] = useState(50);
+  const [zoomLevel, setZoomLevel] = useState(100);
   const [uploadedImage, setUploadedImage] = useState<string>();
   
   // Edit modal state
@@ -89,8 +88,7 @@ const ImageSetPage = () => {
   };
 
   const handleGenerateAll = () => {
-    setGlobalGenerated(true);
-    setPreviewMode(true);
+    setAllGenerated(true);
     // Simulate generation for all frames
     const updatedCuts = cuts.map(cut => ({
       ...cut,
@@ -101,6 +99,10 @@ const ImageSetPage = () => {
       }))
     }));
     setCuts(updatedCuts);
+  };
+
+  const handleDownloadAll = () => {
+    console.log("Download all frames");
   };
 
   const handleImageUpload = (file: File) => {
@@ -177,6 +179,14 @@ const ImageSetPage = () => {
     console.log("Preview frame", frameId);
   };
 
+  const handleTitleChange = (id: string, title: string) => {
+    setCuts(prev => prev.map(c => c.id === id ? { ...c, title } : c));
+  };
+
+  const handleDescriptionChange = (id: string, description: string) => {
+    setCuts(prev => prev.map(c => c.id === id ? { ...c, description } : c));
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -186,83 +196,127 @@ const ImageSetPage = () => {
         <ImageSetSidebar />
         
         {/* Main Content Area */}
-        <div className="flex-1 flex flex-col">
-          {/* Top Controls */}
-          <div className="p-4 border-b border-border/50 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              {/* Empty left side for future controls */}
+        <div className="flex-1 flex flex-col ml-80 p-6">
+        <div className="flex-1">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-4">
+              <h1 className="text-2xl font-bold text-foreground">Image Set Creation</h1>
             </div>
-            
-            <div className="flex items-center gap-2">
-              {previewMode && (
-                <>
-                  <div className="flex items-center gap-2 mr-4">
-                    <ZoomOut className="w-4 h-4 text-muted-foreground" />
-                    <Slider
-                      value={[zoomLevel]}
-                      onValueChange={(value) => setZoomLevel(value[0])}
-                      min={25}
-                      max={200}
-                      step={25}
-                      className="w-24"
-                    />
-                    <ZoomIn className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-xs text-muted-foreground w-12">{zoomLevel}%</span>
-                  </div>
-                </>
-              )}
-              <Button
-                onClick={handleGenerateAll}
-                className="bg-primary hover:bg-primary/90 text-primary-foreground flex items-center gap-2"
-              >
-                <Play className="w-4 h-4" />
-                Generate All
-              </Button>
-            </div>
+            {!allGenerated && (
+              <div className="flex items-center gap-2">
+                <Button onClick={handleGenerateAll}>
+                  Generate All
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={handleDownloadAll}
+                >
+                  Download All
+                </Button>
+              </div>
+            )}
           </div>
 
-          {/* Content Area */}
-          <div className="flex-1 overflow-auto p-6">
-            <div className="space-y-8" style={{ transform: `scale(${zoomLevel / 100})`, transformOrigin: 'top left' }}>
-              {cuts.map((cut) => (
-                <EnhancedCutCard
-                  key={cut.id}
-                  id={cut.id}
-                  title={cut.title}
-                  description={cut.description}
-                  frames={cut.frames}
-                  selectedFrames={selectedFrames}
-                  isGenerated={globalGenerated}
-                  previewMode={previewMode}
-                  onTitleChange={(id, title) => {
-                    setCuts(prev => prev.map(c => c.id === id ? { ...c, title } : c));
-                  }}
-                  onDescriptionChange={(id, description) => {
-                    setCuts(prev => prev.map(c => c.id === id ? { ...c, description } : c));
-                  }}
-                  onFrameSelect={handleFrameSelect}
-                  onFrameTagsChange={handleFrameTagsChange}
-                  onFrameGenerate={handleFrameGenerate}
-                  onFrameEdit={handleFrameEdit}
-                  onFrameRetry={handleFrameRetry}
-                  onFrameDownload={handleFrameDownload}
-                  onFramePreview={handleFramePreview}
-                  onAddFrame={handleAddFrame}
-                  onDelete={(id) => {
-                    setCuts(prev => prev.filter(c => c.id !== id));
-                  }}
-                />
-              ))}
-              
-              {/* Add Cut Placeholder */}
-              <div 
-                className="border-2 border-dashed border-border/50 rounded-lg p-8 text-center hover:border-primary/50 transition-colors cursor-pointer"
-                onClick={handleAddCut}
-              >
-                <Plus className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
-                <p className="text-sm text-muted-foreground">Add New Cut</p>
+          {/* Multi-select bar */}
+          {selectedFrames.length > 0 && allGenerated && (
+            <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 bg-primary text-primary-foreground px-6 py-3 rounded-full shadow-lg flex items-center gap-4">
+              <span>Selected {selectedFrames.length} images</span>
+              <div className="flex gap-2">
+                <Button size="sm" variant="secondary" onClick={() => console.log("Retry")}>
+                  Retry
+                </Button>
+                <Button size="sm" variant="secondary" onClick={() => console.log("Delete")}>
+                  Delete
+                </Button>
+                <Button size="sm" variant="secondary" onClick={() => console.log("Add Tag")}>
+                  Add Tag
+                </Button>
+                <Button size="sm" variant="secondary" onClick={() => console.log("Download")}>
+                  Download
+                </Button>
+                <Button size="sm" variant="secondary" onClick={() => console.log("Share")}>
+                  Share
+                </Button>
               </div>
             </div>
+          )}
+
+          {/* Main Content */}
+          <div className="space-y-6">
+            {allGenerated ? (
+              // Preview Mode - Grid of all generated images
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl font-semibold">Generated Images</h2>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">Zoom</span>
+                    <Slider
+                      value={[zoomLevel]}
+                      onValueChange={([value]) => setZoomLevel(value)}
+                      max={200}
+                      min={50}
+                      step={10}
+                      className="w-24"
+                    />
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                  {cuts.flatMap(cut => cut.frames.filter(frame => frame.isGenerated)).map((frame) => (
+                    <div key={frame.id} className="group relative">
+                      <div 
+                        className="aspect-square bg-muted rounded-lg overflow-hidden cursor-pointer border-2 border-transparent hover:border-primary/50 transition-colors"
+                        style={{ transform: `scale(${zoomLevel / 100})` }}
+                        onClick={() => handleFrameSelect(frame.id, !selectedFrames.includes(frame.id))}
+                      >
+                        {frame.imageUrl ? (
+                          <img src={frame.imageUrl} alt={frame.title} className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20" />
+                        )}
+                        
+                        {selectedFrames.includes(frame.id) && (
+                          <div className="absolute inset-0 bg-primary/20 border-2 border-primary" />
+                        )}
+                        
+                        <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Button size="sm" variant="secondary" className="h-6 w-6 p-0">
+                            ⋯
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              // Edit Mode - Cuts and Frames
+              <>
+                {cuts.map((cut) => (
+                  <EnhancedCutCard
+                    key={cut.id}
+                    id={cut.id}
+                    title={cut.title}
+                    description={cut.description}
+                    frames={cut.frames}
+                    selectedFrames={selectedFrames}
+                    isGenerated={allGenerated}
+                    previewMode={allGenerated}
+                    onTitleChange={handleTitleChange}
+                    onDescriptionChange={handleDescriptionChange}
+                    onFrameSelect={handleFrameSelect}
+                    onFrameTagsChange={handleFrameTagsChange}
+                    onFrameGenerate={handleFrameGenerate}
+                    onFrameEdit={handleFrameEdit}
+                    onFrameRetry={handleFrameRetry}
+                    onFrameDownload={handleFrameDownload}
+                    onFramePreview={handleFramePreview}
+                    onAddFrame={handleAddFrame}
+                    onDelete={(cutId) => setCuts(prev => prev.filter(c => c.id !== cutId))}
+                  />
+                ))}
+              </>
+            )}
           </div>
         </div>
       </div>

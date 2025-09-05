@@ -1,29 +1,29 @@
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, Settings, Upload, Image as ImageIcon, Clipboard } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Slider } from "@/components/ui/slider";
+import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Upload, Clipboard, ChevronDown, ChevronRight, Clock, Settings } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface ImageSetSidebarProps {
   className?: string;
 }
 
 const ImageSetSidebar = ({ className }: ImageSetSidebarProps) => {
-  const [globalPrompt, setGlobalPrompt] = useState("");
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [settings, setSettings] = useState({
-    shotLength: [50], // 0-100 (Short to Long)
-    cuts: [4],
-    frames: [8],
     size: "1024x1024",
     cfgScale: [7.5],
     steps: [30],
     seed: [-1]
   });
   const [aiSettingsExpanded, setAiSettingsExpanded] = useState(false);
+
+  const handleSettingChange = (key: string, value: any) => {
+    setSettings(prev => ({ ...prev, [key]: value }));
+  };
 
   const handleImageUpload = (file: File) => {
     if (file.type.startsWith('image/')) {
@@ -66,21 +66,21 @@ const ImageSetSidebar = ({ className }: ImageSetSidebarProps) => {
 
   return (
     <div className={cn(
-      "fixed left-0 top-0 h-full bg-card/80 backdrop-blur-sm border-r border-border/50 w-80 z-40",
+      "fixed left-0 top-16 h-[calc(100vh-4rem)] bg-card/80 backdrop-blur-sm border-r border-border/50 w-80 z-40 flex flex-col",
       className
     )}>
-      <div className="h-full overflow-y-auto p-6 space-y-6">
+      <div className="flex-1 overflow-y-auto p-6 space-y-6">
         {/* Header */}
-        <div className="pt-16">
-          <h2 className="text-lg font-semibold text-foreground mb-2">Image Set Generation</h2>
+        <div>
+          <h2 className="text-lg font-semibold text-foreground mb-2">Set Generation</h2>
           <p className="text-sm text-muted-foreground">
-            Create consistent character sets and storyboards
+            Create image sets and storyboards
           </p>
         </div>
 
-        {/* Original Image Upload */}
+        {/* Image Upload */}
         <div className="space-y-3">
-          <label className="text-sm font-medium text-foreground">Original Image</label>
+          <Label className="text-sm font-medium">Upload Image</Label>
           <div className="border-2 border-dashed border-border/50 rounded-lg p-4 text-center hover:border-primary/50 transition-colors">
             <input
               type="file"
@@ -107,7 +107,6 @@ const ImageSetSidebar = ({ className }: ImageSetSidebarProps) => {
                     htmlFor="image-upload"
                     className="inline-flex items-center gap-2 px-3 py-2 bg-primary text-primary-foreground text-sm rounded-lg cursor-pointer hover:bg-primary/90 transition-colors"
                   >
-                    <ImageIcon className="h-4 w-4" />
                     Upload
                   </label>
                   <button
@@ -123,90 +122,18 @@ const ImageSetSidebar = ({ className }: ImageSetSidebarProps) => {
           </div>
         </div>
 
-        {/* Global Prompt */}
-        <div className="space-y-3">
-          <label className="text-sm font-medium text-foreground">Global Prompt</label>
-          <Textarea
-            value={globalPrompt}
-            onChange={(e) => setGlobalPrompt(e.target.value)}
-            placeholder="Describe the overall style and setting for your image set..."
-            className="min-h-[80px] bg-card/50 border-border/50 focus:border-primary/50"
-          />
-        </div>
-
-        {/* Shot Length Slider */}
-        <div className="space-y-3">
-          <div className="flex justify-between items-center">
-            <label className="text-sm font-medium text-foreground">Shot Length</label>
-            <span className="text-sm text-muted-foreground">
-              {settings.shotLength[0] < 33 ? "Short" : settings.shotLength[0] < 67 ? "Medium" : "Long"}
-            </span>
-          </div>
-          <Slider
-            value={settings.shotLength}
-            onValueChange={(value) => setSettings(prev => ({ ...prev, shotLength: value }))}
-            min={0}
-            max={100}
-            step={1}
-            className="w-full"
-          />
-          <div className="flex justify-between text-xs text-muted-foreground">
-            <span>Short</span>
-            <span>Long</span>
-          </div>
-        </div>
-
-        {/* Cuts and Frames */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Cuts</label>
-            <div className="flex justify-between items-center">
-              <span className="text-xs text-muted-foreground">Count</span>
-              <span className="text-sm text-muted-foreground">{settings.cuts[0]}</span>
-            </div>
-            <Slider
-              value={settings.cuts}
-              onValueChange={(value) => setSettings(prev => ({ ...prev, cuts: value }))}
-              min={1}
-              max={12}
-              step={1}
-              className="w-full"
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Frames</label>
-            <div className="flex justify-between items-center">
-              <span className="text-xs text-muted-foreground">Per Cut</span>
-              <span className="text-sm text-muted-foreground">{settings.frames[0]}</span>
-            </div>
-            <Slider
-              value={settings.frames}
-              onValueChange={(value) => setSettings(prev => ({ ...prev, frames: value }))}
-              min={2}
-              max={16}
-              step={1}
-              className="w-full"
-            />
-          </div>
-        </div>
-
         {/* Image Size */}
-        <div className="space-y-3">
-          <label className="text-sm font-medium text-foreground">Image Size</label>
-          <Select
-            value={settings.size}
-            onValueChange={(value) => setSettings(prev => ({ ...prev, size: value }))}
-          >
-            <SelectTrigger className="w-full bg-card/50 border-border/50">
+        <div className="space-y-2">
+          <Label className="text-sm font-medium">Image Size</Label>
+          <Select value={settings.size} onValueChange={(value) => handleSettingChange("size", value)}>
+            <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {imageSizes.map((size) => (
-                <SelectItem key={size.value} value={size.value}>
-                  {size.label}
-                </SelectItem>
-              ))}
+              <SelectItem value="512x512">512 × 512</SelectItem>
+              <SelectItem value="768x768">768 × 768</SelectItem>
+              <SelectItem value="1024x1024">1024 × 1024</SelectItem>
+              <SelectItem value="1536x1024">1536 × 1024</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -228,12 +155,12 @@ const ImageSetSidebar = ({ className }: ImageSetSidebarProps) => {
             {/* CFG Scale */}
             <div className="space-y-2">
               <div className="flex justify-between items-center">
-                <label className="text-sm font-medium text-foreground">CFG Scale</label>
+                <Label className="text-sm font-medium">CFG Scale</Label>
                 <span className="text-sm text-muted-foreground">{settings.cfgScale[0]}</span>
               </div>
               <Slider
                 value={settings.cfgScale}
-                onValueChange={(value) => setSettings(prev => ({ ...prev, cfgScale: value }))}
+                onValueChange={(value) => handleSettingChange("cfgScale", value)}
                 min={1}
                 max={20}
                 step={0.5}
@@ -244,12 +171,12 @@ const ImageSetSidebar = ({ className }: ImageSetSidebarProps) => {
             {/* Steps */}
             <div className="space-y-2">
               <div className="flex justify-between items-center">
-                <label className="text-sm font-medium text-foreground">Steps</label>
+                <Label className="text-sm font-medium">Steps</Label>
                 <span className="text-sm text-muted-foreground">{settings.steps[0]}</span>
               </div>
               <Slider
                 value={settings.steps}
-                onValueChange={(value) => setSettings(prev => ({ ...prev, steps: value }))}
+                onValueChange={(value) => handleSettingChange("steps", value)}
                 min={10}
                 max={100}
                 step={5}
@@ -260,14 +187,14 @@ const ImageSetSidebar = ({ className }: ImageSetSidebarProps) => {
             {/* Seed */}
             <div className="space-y-2">
               <div className="flex justify-between items-center">
-                <label className="text-sm font-medium text-foreground">Seed</label>
+                <Label className="text-sm font-medium">Seed</Label>
                 <span className="text-sm text-muted-foreground">
                   {settings.seed[0] === -1 ? "Random" : settings.seed[0]}
                 </span>
               </div>
               <Slider
                 value={settings.seed}
-                onValueChange={(value) => setSettings(prev => ({ ...prev, seed: value }))}
+                onValueChange={(value) => handleSettingChange("seed", value)}
                 min={-1}
                 max={2147483647}
                 step={1}
@@ -276,6 +203,17 @@ const ImageSetSidebar = ({ className }: ImageSetSidebarProps) => {
             </div>
           </CollapsibleContent>
         </Collapsible>
+
+        {/* History */}
+        <div className="space-y-3 mt-auto pt-4 border-t border-border">
+          <div className="flex items-center gap-2">
+            <Clock className="h-4 w-4" />
+            <Label className="font-medium">History</Label>
+          </div>
+          <div className="text-sm text-muted-foreground">
+            No history yet
+          </div>
+        </div>
       </div>
     </div>
   );

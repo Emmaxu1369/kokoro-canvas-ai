@@ -124,18 +124,33 @@ const EditModal = ({
           </div>
 
           {/* Right Side - Current Image & Controls */}
-          <div className="flex-1 space-y-4">
-            {/* Current Image */}
-            <div className="space-y-2">
-              <Label className="text-sm font-medium">Current Image</Label>
-              <div className="aspect-square rounded-lg overflow-hidden bg-muted max-w-md mx-auto">
-                {currentImage && (
-                  <img 
-                    src={currentImage} 
-                    alt="Current result" 
-                    className="w-full h-full object-cover"
-                  />
-                )}
+          <div className="flex-1 p-6">
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <div className="aspect-square bg-muted rounded-lg overflow-hidden mb-6">
+                  {currentImage ? (
+                    <img src={currentImage} alt="Current image" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
+                      <span className="text-muted-foreground">No image</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              <div className="flex flex-col gap-2 justify-center">
+                <Button onClick={() => onRetry?.(currentImage || "")}>
+                  Retry
+                </Button>
+                <Button onClick={() => onSave?.(currentImage || "")}>
+                  Save
+                </Button>
+                <Button variant="outline" onClick={() => console.log("Share")}>
+                  Share
+                </Button>
+                <Button variant="outline" onClick={() => console.log("Confirm")}>
+                  Confirm
+                </Button>
               </div>
             </div>
 

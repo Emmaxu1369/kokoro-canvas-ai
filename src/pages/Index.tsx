@@ -1,76 +1,107 @@
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Zap, Sparkles, Image as ImageIcon } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
 
 const Index = () => {
-  const [activeDemo, setActiveDemo] = useState<"variation" | "storyflow" | "fast">("variation");
+  const [activeDemo, setActiveDemo] = useState("variation");
+
+  const demoContent = {
+    variation: {
+      title: "Image Variation",
+      description: "Transform your images with AI-powered variations",
+      image: "/placeholder.svg?height=400&width=400",
+    },
+    storyflow: {
+      title: "Storyflow Creation", 
+      description: "Create complete image sets and stories",
+      image: "/placeholder.svg?height=400&width=400",
+    },
+    fast: {
+      title: "Fast Generation",
+      description: "Lightning-fast AI image creation",
+      image: "/placeholder.svg?height=400&width=400",
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
       
-      {/* Center Area */}
-      <section className="flex-1 flex items-center justify-center min-h-screen pt-20 pb-16">
-        <div className="container mx-auto px-6 text-center">
-          {/* Slogan */}
-          <div className="space-y-6 mb-16">
-            <h1 className="text-5xl lg:text-7xl font-bold leading-tight">
-              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                All-in-One
-              </span>
-              <br />
-              <span className="text-foreground">Anime AI Creation Tool</span>
-            </h1>
-            
-            <p className="text-xl lg:text-2xl text-muted-foreground max-w-4xl mx-auto">
-              Just one simple sentence or tag. Supports image variation, smart editing, 
-              and full set generation — create faster than ever.
+      <main className="container mx-auto px-4 py-12 pb-32">
+        <div className="text-center max-w-4xl mx-auto mb-16">
+          <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-4">
+            All-in-One Anime AI Creation Tool
+          </h1>
+          <p className="text-xl md:text-2xl text-muted-foreground mb-8">
+            Just one simple sentence or tag. Supports image variation, smart editing, and full set generation — create faster than ever.
+          </p>
+        </div>
+
+        {/* Demo Content */}
+        <div className="max-w-2xl mx-auto">
+          <div className={`bg-card rounded-lg p-8 shadow-lg transition-all duration-300 ${
+            activeDemo ? "animate-pulse" : ""
+          }`}>
+            <img 
+              src={demoContent[activeDemo as keyof typeof demoContent].image} 
+              alt={demoContent[activeDemo as keyof typeof demoContent].title}
+              className="w-full h-64 object-cover rounded-lg mb-4"
+            />
+            <h3 className="text-2xl font-semibold text-foreground mb-2">
+              {demoContent[activeDemo as keyof typeof demoContent].title}
+            </h3>
+            <p className="text-muted-foreground">
+              {demoContent[activeDemo as keyof typeof demoContent].description}
             </p>
           </div>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center max-w-2xl mx-auto">
-            <Link to="/variation" className="w-full sm:w-auto">
-              <Button 
-                size="lg" 
-                className="w-full px-8 py-6 text-lg bg-primary hover:bg-primary/90 text-primary-foreground"
-                onClick={() => setActiveDemo("variation")}
-              >
-                <ImageIcon className="w-6 h-6 mr-3" />
-                Variation
-                <ArrowRight className="w-5 h-5 ml-3" />
-              </Button>
-            </Link>
-            
-            <Link to="/image-set" className="w-full sm:w-auto">
-              <Button 
-                size="lg" 
-                variant="outline"
-                className="w-full px-8 py-6 text-lg border-primary/50 text-primary hover:bg-primary/10"
-                onClick={() => setActiveDemo("storyflow")}
-              >
-                <Sparkles className="w-6 h-6 mr-3" />
-                Storyflow
-                <ArrowRight className="w-5 h-5 ml-3" />
-              </Button>
-            </Link>
-            
-            <Button 
-              size="lg" 
-              variant="outline"
-              className="w-full sm:w-auto px-8 py-6 text-lg border-accent/50 text-accent hover:bg-accent/10"
-              onClick={() => setActiveDemo("fast")}
-            >
-              <Zap className="w-6 h-6 mr-3 animate-pulse" />
-              Fast
-              <ArrowRight className="w-5 h-5 ml-3" />
-            </Button>
-          </div>
         </div>
-      </section>
+      </main>
+      
+      {/* Floating CTA Buttons */}
+      <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50">
+        <div className="flex gap-4 bg-background/80 backdrop-blur-md rounded-full p-4 border shadow-lg">
+          <Button 
+            size="lg" 
+            variant={activeDemo === "variation" ? "default" : "outline"}
+            className={`px-8 py-6 text-lg transition-all duration-300 ${
+              activeDemo === "variation" ? "animate-pulse" : ""
+            }`}
+            onClick={() => setActiveDemo("variation")}
+            asChild
+          >
+            <Link to="/variation">Variation</Link>
+          </Button>
+          <Button 
+            size="lg" 
+            variant={activeDemo === "storyflow" ? "default" : "outline"}
+            className={`px-8 py-6 text-lg transition-all duration-300 ${
+              activeDemo === "storyflow" ? "animate-pulse" : ""
+            }`}
+            onClick={() => setActiveDemo("storyflow")}
+            asChild
+          >
+            <Link to="/image-set">Storyflow</Link>
+          </Button>
+          <Button 
+            size="lg" 
+            variant={activeDemo === "fast" ? "default" : "outline"}
+            className={`px-8 py-6 text-lg transition-all duration-300 relative overflow-hidden ${
+              activeDemo === "fast" ? "animate-pulse" : ""
+            }`}
+            onClick={() => setActiveDemo("fast")}
+            asChild
+          >
+            <Link to="/fast">
+              Fast
+              <span className="absolute -top-1 -right-1 text-orange-500 animate-bounce">🔥</span>
+              <span className="absolute -top-2 right-2 text-red-500 animate-bounce delay-100">🔥</span>
+              <span className="absolute top-0 -right-2 text-yellow-500 animate-bounce delay-200">🔥</span>
+            </Link>
+          </Button>
+        </div>
+      </div>
       
       <Footer />
     </div>

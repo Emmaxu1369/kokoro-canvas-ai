@@ -206,26 +206,18 @@ const EnhancedFrameCard = ({
               suggestions={tagSuggestions}
               className="mb-3"
             />
-            <div className="flex gap-2">
-              <Button
-                size="sm"
-                onClick={() => {
-                  onGenerate(id);
-                  setShowTagInput(false);
-                }}
-                className="bg-primary hover:bg-primary/90 flex-1"
-              >
-                <Play className="h-4 w-4 mr-2" />
-                Generate This Frame
-              </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => setShowTagInput(false)}
-              >
-                Cancel
-              </Button>
-            </div>
+              <div className="mt-2">
+                <Button 
+                  size="sm" 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onGenerate(id);
+                  }}
+                  className="w-full"
+                >
+                  Generate
+                </Button>
+              </div>
           </div>
         )}
 

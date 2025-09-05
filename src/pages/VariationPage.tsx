@@ -68,17 +68,6 @@ const VariationPage = () => {
   const handleImageUpload = (file: File) => {
     const url = URL.createObjectURL(file);
     setSelectedImage(url);
-    
-    // Add system message about image upload
-    const uploadMessage: Message = {
-      id: Date.now().toString(),
-      type: "system", 
-      content: "Image uploaded successfully! Now describe how you'd like to modify it.",
-      image: url,
-      timestamp: new Date()
-    };
-    
-    setMessages(prev => [...prev, uploadMessage]);
   };
 
   const handleSelectImage = (imageUrl: string) => {
