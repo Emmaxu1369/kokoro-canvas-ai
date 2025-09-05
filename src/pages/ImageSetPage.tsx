@@ -52,7 +52,7 @@ const ImageSetPage = () => {
   const [cuts, setCuts] = useState<Cut[]>(mockCuts);
   const [allGenerated, setAllGenerated] = useState(false);
   const [selectedFrames, setSelectedFrames] = useState<string[]>([]);
-  const [zoomLevel, setZoomLevel] = useState(100);
+  const [zoomLevel, setZoomLevel] = useState(25); // Start with smaller zoom to fit more images
   const [uploadedImage, setUploadedImage] = useState<string>();
   
   // Edit modal state
@@ -255,9 +255,9 @@ const ImageSetPage = () => {
                     <Slider
                       value={[zoomLevel]}
                       onValueChange={([value]) => setZoomLevel(value)}
-                      max={200}
-                      min={50}
-                      step={10}
+                      max={100}
+                      min={10}
+                      step={5}
                       className="w-24"
                     />
                   </div>
@@ -266,7 +266,7 @@ const ImageSetPage = () => {
                 <div 
                   className="grid gap-4" 
                   style={{ 
-                    gridTemplateColumns: `repeat(auto-fit, minmax(${Math.max(150, 300 * zoomLevel / 100)}px, 1fr))` 
+                    gridTemplateColumns: `repeat(auto-fit, minmax(${Math.max(120, 200 * zoomLevel / 100)}px, 1fr))` 
                   }}
                 >
                   {cuts.flatMap(cut => cut.frames.filter(frame => frame.isGenerated)).map((frame) => (
@@ -288,20 +288,57 @@ const ImageSetPage = () => {
                       
                       {/* Three dots menu below image */}
                       <div className="flex justify-center mt-2">
-                        <div className="relative">
+                        <div className="relative group/menu">
                           <Button 
                             size="sm" 
                             variant="ghost" 
-                            className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                            className="h-6 w-6 p-0 opacity-70 group-hover:opacity-100 transition-opacity"
                             onClick={(e) => {
                               e.stopPropagation();
-                              // TODO: Show dropdown menu
-                              console.log("Show menu for frame", frame.id);
                             }}
                           >
                             ⋯
                           </Button>
-                          {/* TODO: Add dropdown menu with: Edit, Download, Retry, Share, Duplicate, Add More */}
+                          
+                          {/* Dropdown Menu */}
+                          <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-popover border border-border rounded-lg shadow-lg py-2 min-w-[140px] opacity-0 group-hover/menu:opacity-100 pointer-events-none group-hover/menu:pointer-events-auto transition-opacity z-50">
+                            <button 
+                              className="w-full px-3 py-1.5 text-left text-sm hover:bg-muted transition-colors"
+                              onClick={() => handleFrameEdit(frame.id)}
+                            >
+                              Edit
+                            </button>
+                            <button 
+                              className="w-full px-3 py-1.5 text-left text-sm hover:bg-muted transition-colors"
+                              onClick={() => handleFrameDownload(frame.id)}
+                            >
+                              Download
+                            </button>
+                            <button 
+                              className="w-full px-3 py-1.5 text-left text-sm hover:bg-muted transition-colors"
+                              onClick={() => handleFrameRetry(frame.id)}
+                            >
+                              Retry
+                            </button>
+                            <button 
+                              className="w-full px-3 py-1.5 text-left text-sm hover:bg-muted transition-colors"
+                              onClick={() => console.log("Share frame", frame.id)}
+                            >
+                              Share
+                            </button>
+                            <button 
+                              className="w-full px-3 py-1.5 text-left text-sm hover:bg-muted transition-colors"
+                              onClick={() => console.log("Duplicate frame", frame.id)}
+                            >
+                              Duplicate
+                            </button>
+                            <button 
+                              className="w-full px-3 py-1.5 text-left text-sm hover:bg-muted transition-colors"
+                              onClick={() => console.log("Add more frames", frame.id)}
+                            >
+                              Add More
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>

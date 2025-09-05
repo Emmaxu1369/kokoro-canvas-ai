@@ -83,17 +83,12 @@ const Index = () => {
           <Button 
             size="lg" 
             variant={activeDemo === "fast" ? "default" : "outline"}
-            className="px-8 py-6 text-lg transition-all duration-300 relative overflow-hidden"
+            className="px-8 py-6 text-lg transition-all duration-300"
             onMouseEnter={() => setActiveDemo("fast")}
             onClick={() => setActiveDemo("fast")}
             asChild
           >
-            <Link to="/fast">
-              Fast
-              <span className="absolute -top-1 -right-1 text-orange-500 animate-bounce">🔥</span>
-              <span className="absolute -top-2 right-2 text-red-500 animate-bounce delay-100">🔥</span>
-              <span className="absolute top-0 -right-2 text-yellow-500 animate-bounce delay-200">🔥</span>
-            </Link>
+            <Link to="/fast">Fast</Link>
           </Button>
         </div>
       </div>

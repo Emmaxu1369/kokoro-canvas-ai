@@ -178,18 +178,17 @@ const EnhancedFrameCard = ({
                 </div>
               )}
 
-              {/* Generate button for non-generated frames */}
-              {!isGenerated && !previewMode && (
-                <div className={cn(
-                  "absolute inset-0 bg-black/50 flex items-center justify-center transition-opacity",
-                  isHovered ? "opacity-100" : "opacity-0"
-                )}>
-                  <Button
-                    size="sm"
-                    onClick={() => onGenerate(id)}
-                    className="bg-primary hover:bg-primary/90"
+              {/* Generate button for non-generated frames - removed on hover */}
+              {!isGenerated && !previewMode && showTagInput && (
+                <div className="mt-2">
+                  <Button 
+                    size="sm" 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onGenerate(id);
+                    }}
+                    className="w-full"
                   >
-                    <Play className="h-4 w-4 mr-1" />
                     Generate
                   </Button>
                 </div>
@@ -208,18 +207,18 @@ const EnhancedFrameCard = ({
               suggestions={tagSuggestions}
               className="mb-3"
             />
-              <div className="mt-2">
-                <Button 
-                  size="sm" 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onGenerate(id);
-                  }}
-                  className="w-full"
-                >
-                  Generate
-                </Button>
-              </div>
+            <div className="mt-2">
+              <Button 
+                size="sm" 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onGenerate(id);
+                }}
+                className="w-full"
+              >
+                Generate
+              </Button>
+            </div>
           </div>
         )}
 
