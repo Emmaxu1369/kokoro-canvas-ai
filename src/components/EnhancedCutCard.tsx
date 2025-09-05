@@ -22,6 +22,7 @@ interface EnhancedCutCardProps {
   frames: Frame[];
   selectedFrames: string[];
   isGenerated?: boolean;
+  previewMode?: boolean;
   onTitleChange: (id: string, title: string) => void;
   onDescriptionChange: (id: string, description: string) => void;
   onFrameSelect: (frameId: string, selected: boolean) => void;
@@ -43,6 +44,7 @@ const EnhancedCutCard = ({
   frames,
   selectedFrames,
   isGenerated = false,
+  previewMode = false,
   onTitleChange,
   onDescriptionChange,
   onFrameSelect,
@@ -175,23 +177,24 @@ const EnhancedCutCard = ({
         {/* Frames Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4">
           {frames.map((frame) => (
-            <EnhancedFrameCard
-              key={frame.id}
-              id={frame.id}
-              title={frame.title}
-              tags={frame.tags}
-              isGenerated={frame.isGenerated}
-              imageUrl={frame.imageUrl}
-              isSelected={selectedFrames.includes(frame.id)}
-              globalGenerated={isGenerated}
-              onSelect={onFrameSelect}
-              onTagsChange={onFrameTagsChange}
-              onGenerate={onFrameGenerate}
-              onEdit={onFrameEdit}
-              onRetry={onFrameRetry}
-              onDownload={onFrameDownload}
-              onPreview={onFramePreview}
-            />
+              <EnhancedFrameCard
+                key={frame.id}
+                id={frame.id}
+                title={frame.title}
+                tags={frame.tags}
+                isGenerated={frame.isGenerated}
+                imageUrl={frame.imageUrl}
+                isSelected={selectedFrames.includes(frame.id)}
+                globalGenerated={isGenerated}
+                previewMode={previewMode}
+                onSelect={onFrameSelect}
+                onTagsChange={onFrameTagsChange}
+                onGenerate={onFrameGenerate}
+                onEdit={onFrameEdit}
+                onRetry={onFrameRetry}
+                onDownload={onFrameDownload}
+                onPreview={onFramePreview}
+              />
           ))}
 
           {/* Add Frame Button */}
