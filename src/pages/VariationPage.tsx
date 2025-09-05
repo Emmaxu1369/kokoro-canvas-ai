@@ -1,9 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import VariationSidebar from "@/components/VariationSidebar";
 import ChatMessage from "@/components/ChatMessage";
 import ChatInput from "@/components/ChatInput";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
 interface Message {
   id: string;
@@ -16,6 +19,7 @@ interface Message {
 }
 
 const VariationPage = () => {
+  const navigate = useNavigate();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
@@ -106,8 +110,22 @@ const VariationPage = () => {
         
         {/* Main Chat Area */}
         <div className="flex-1 flex flex-col">
+          {/* Header with Back Button */}
+          <div className="flex items-center gap-4 p-6 pb-2 border-b border-border/50">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate("/")}
+              className="hover:bg-muted/50"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back
+            </Button>
+            <h1 className="text-xl font-semibold text-foreground">AI Variation Generator</h1>
+          </div>
+          
           {/* Messages Area */}
-          <ScrollArea className="flex-1 p-6">
+          <ScrollArea className="flex-1 p-6 pt-4">
             <div className="max-w-4xl mx-auto">
               <div className="space-y-4">
                 {messages.map((message) => (
