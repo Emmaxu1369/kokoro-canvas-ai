@@ -8,52 +8,52 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Dark anime-inspired color palette */
-    --background: 220 27% 8%;
-    --foreground: 220 15% 95%;
+    /* KokoroLab color scheme - matching reference image */
+    --background: 210 30% 6%;
+    --foreground: 210 15% 92%;
 
-    --card: 220 25% 10%;
-    --card-foreground: 220 15% 95%;
+    --card: 210 25% 12%;
+    --card-foreground: 210 15% 92%;
 
-    --popover: 220 25% 12%;
-    --popover-foreground: 220 15% 95%;
+    --popover: 210 25% 14%;
+    --popover-foreground: 210 15% 92%;
 
-    /* Anime purple/blue primary theme */
-    --primary: 260 85% 65%;
-    --primary-foreground: 220 15% 95%;
-    --primary-glow: 260 85% 75%;
+    /* Bluish-green primary (cyan accent from reference) */
+    --primary: 174 100% 42%;
+    --primary-foreground: 210 30% 8%;
+    --primary-glow: 174 100% 52%;
 
-    /* Subtle secondary with purple tint */
-    --secondary: 220 20% 15%;
-    --secondary-foreground: 220 15% 90%;
+    /* Dark secondary */
+    --secondary: 210 20% 18%;
+    --secondary-foreground: 210 15% 88%;
 
-    /* Muted with anime aesthetic */
-    --muted: 220 15% 18%;
-    --muted-foreground: 220 10% 70%;
+    /* Muted darker tones */
+    --muted: 210 15% 22%;
+    --muted-foreground: 210 10% 65%;
 
-    /* Accent with blue highlights */
-    --accent: 240 85% 60%;
-    --accent-foreground: 220 15% 95%;
-    --accent-glow: 240 85% 70%;
+    /* Accent matching primary theme */
+    --accent: 174 80% 45%;
+    --accent-foreground: 210 30% 8%;
+    --accent-glow: 174 80% 55%;
 
     --destructive: 0 75% 60%;
-    --destructive-foreground: 220 15% 95%;
+    --destructive-foreground: 210 15% 92%;
 
-    --border: 220 20% 20%;
-    --input: 220 25% 12%;
-    --ring: 260 85% 65%;
+    --border: 210 20% 25%;
+    --input: 210 25% 16%;
+    --ring: 174 100% 42%;
 
-    /* Anime-inspired gradients */
+    /* KokoroLab gradients */
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
-    --gradient-hero: linear-gradient(135deg, hsl(var(--primary) / 0.9), hsl(var(--accent) / 0.8));
-    --gradient-card: linear-gradient(145deg, hsl(var(--card)), hsl(220 30% 12%));
-    --gradient-glow: radial-gradient(circle at center, hsl(var(--primary) / 0.3), transparent 70%);
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary) / 0.8), hsl(var(--accent) / 0.6));
+    --gradient-card: linear-gradient(145deg, hsl(var(--card)), hsl(210 30% 14%));
+    --gradient-glow: radial-gradient(circle at center, hsl(var(--primary) / 0.4), transparent 70%);
 
-    /* Shadows with anime glow effects */
-    --shadow-primary: 0 10px 30px -10px hsl(var(--primary) / 0.4);
-    --shadow-accent: 0 10px 30px -10px hsl(var(--accent) / 0.4);
-    --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.6);
-    --shadow-card: 0 8px 32px -8px hsl(220 50% 5% / 0.8);
+    /* Shadows with cyan glow effects */
+    --shadow-primary: 0 10px 30px -10px hsl(var(--primary) / 0.5);
+    --shadow-accent: 0 10px 30px -10px hsl(var(--accent) / 0.5);
+    --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.4);
+    --shadow-card: 0 8px 32px -8px hsl(210 50% 3% / 0.9);
 
     /* Animation curves */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
