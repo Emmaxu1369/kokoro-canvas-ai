@@ -85,14 +85,14 @@ const EditModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden bg-gradient-to-br from-background via-background to-muted/20">
-        <DialogHeader>
+      <DialogContent className="max-w-7xl w-[95vw] h-[95vh] max-h-none overflow-hidden bg-gradient-to-br from-background via-background to-muted/20 p-0">
+        <DialogHeader className="p-6 pb-0">
           <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
             Edit Image
           </DialogTitle>
         </DialogHeader>
         
-        <div className="flex gap-6 h-[75vh]">
+        <div className="flex gap-6 h-[calc(95vh-80px)] p-6 pt-0">
           {/* Left - History */}
           <div className="w-64 bg-card/50 backdrop-blur-sm rounded-xl border border-border/50 p-4">
             <h3 className="text-sm font-semibold text-muted-foreground mb-4 uppercase tracking-wide">History</h3>
@@ -144,7 +144,7 @@ const EditModal = ({
                     onClick={() => console.log("Confirm")}
                     className="px-6 py-3 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground"
                   >
-                    确认
+                    Confirm
                   </Button>
                   <Button 
                     onClick={() => onDownload?.()}
@@ -152,14 +152,14 @@ const EditModal = ({
                     className="px-6 py-3 border-primary/30 hover:bg-primary/10"
                   >
                     <Download className="w-4 h-4 mr-2" />
-                    下载
+                    Download
                   </Button>
                   <Button 
                     onClick={() => console.log("Share")}
                     variant="outline"
                     className="px-6 py-3"
                   >
-                    分享
+                    Share
                   </Button>
                   <Button 
                     onClick={() => onRetry?.()}
@@ -167,7 +167,7 @@ const EditModal = ({
                     className="px-6 py-3"
                   >
                     <RotateCcw className="w-4 h-4 mr-2" />
-                    重试
+                    Retry
                   </Button>
                 </div>
               </div>

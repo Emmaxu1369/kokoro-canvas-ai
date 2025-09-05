@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import ImageSetSidebar from "@/components/ImageSetSidebar";
 import EnhancedCutCard from "@/components/EnhancedCutCard";
@@ -7,7 +8,7 @@ import EditModal from "@/components/EditModal";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Plus, Download, Play, ZoomIn, ZoomOut, MoreHorizontal, Edit } from "lucide-react";
+import { Plus, Download, Play, ZoomIn, ZoomOut, MoreHorizontal, Edit, ArrowLeft } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 
 interface Frame {
@@ -49,6 +50,7 @@ const mockCuts: Cut[] = [
 ];
 
 const ImageSetPage = () => {
+  const navigate = useNavigate();
   const [cuts, setCuts] = useState<Cut[]>(mockCuts);
   const [allGenerated, setAllGenerated] = useState(false);
   const [selectedFrames, setSelectedFrames] = useState<string[]>([]);
@@ -200,6 +202,15 @@ const ImageSetPage = () => {
         <div className="flex-1">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-4">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate("/")}
+                className="hover:bg-muted/50"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back
+              </Button>
               <h1 className="text-2xl font-bold text-foreground">Image Set Creation</h1>
             </div>
             {!allGenerated && (
