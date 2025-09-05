@@ -10,6 +10,7 @@ interface Message {
   type: "user" | "system";
   content: string;
   image?: string;
+  images?: string[];  // For multiple candidate images
   timestamp: Date;
   mode?: "variation" | "remix";
 }
@@ -42,11 +43,18 @@ const VariationPage = () => {
 
     // Simulate AI response after delay
     setTimeout(() => {
+      // Generate 3 candidate images by default
+      const candidateImages = [
+        "/placeholder.svg",
+        "/placeholder.svg", 
+        "/placeholder.svg"
+      ];
+
       const systemMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: "system",
         content: `Generated ${mode} based on: "${content}"`,
-        image: "/placeholder.svg", // Mock generated image
+        images: candidateImages, // Multiple candidates
         timestamp: new Date()
       };
       
@@ -117,6 +125,7 @@ const VariationPage = () => {
                     type={message.type}
                     content={message.content}
                     image={message.image}
+                    images={message.images}
                     timestamp={message.timestamp}
                     onRetry={handleRetry}
                     onDownload={handleDownload}

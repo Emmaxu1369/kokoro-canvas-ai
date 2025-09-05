@@ -7,6 +7,7 @@ interface ChatMessageProps {
   type: "user" | "system";
   content: string;
   image?: string;
+  images?: string[];  // For multiple candidate images
   timestamp?: Date;
   onRetry?: () => void;
   onDownload?: (imageUrl: string) => void;
@@ -18,6 +19,7 @@ const ChatMessage = ({
   type, 
   content, 
   image, 
+  images,
   timestamp,
   onRetry,
   onDownload,
@@ -25,6 +27,7 @@ const ChatMessage = ({
   onSelectImage
 }: ChatMessageProps) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [hoveredImageIndex, setHoveredImageIndex] = useState<number | null>(null);
 
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -55,7 +58,8 @@ const ChatMessage = ({
             <p className="text-sm leading-relaxed">{content}</p>
           )}
           
-          {image && (
+          {/* Single Image */}
+          {image && !images && (
             <div 
               className="mt-3 relative group cursor-pointer"
               onMouseEnter={() => setIsHovered(true)}
@@ -101,7 +105,7 @@ const ChatMessage = ({
                   size="sm"
                   variant="secondary"
                   onClick={(e) => {
-                    e.stopPropagation();
+                    e.stopPropagation();     
                     onSave?.(image);
                   }}
                   className="h-8 w-8 p-0 bg-card/80 hover:bg-card"
@@ -116,6 +120,65 @@ const ChatMessage = ({
                 >
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
+              </div>
+            </div>
+          )}
+
+          {/* Multiple Candidate Images */}
+          {images && images.length > 0 && (
+            <div className="mt-3 space-y-2">
+              <p className="text-xs text-muted-foreground">Select an image to continue:</p>
+              <div className="grid grid-cols-3 gap-3">
+                {images.map((imgUrl, index) => (
+                  <div 
+                    key={index}
+                    className="relative group cursor-pointer"
+                    onMouseEnter={() => setHoveredImageIndex(index)}
+                    onMouseLeave={() => setHoveredImageIndex(null)}
+                    onClick={() => onSelectImage?.(imgUrl)}
+                  >
+                    <img 
+                      src={imgUrl} 
+                      alt={`Candidate ${index + 1}`} 
+                      className="rounded-lg w-full aspect-square object-cover shadow-md hover:shadow-lg transition-all hover:scale-105"
+                    />
+                    
+                    {/* Hover overlay */}
+                    <div className={cn(
+                      "absolute inset-0 bg-black/50 rounded-lg flex items-center justify-center gap-1 transition-opacity",
+                      hoveredImageIndex === index ? "opacity-100" : "opacity-0"
+                    )}>
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onDownload?.(imgUrl);
+                        }}
+                        className="h-7 w-7 p-0 bg-card/80 hover:bg-card"
+                      >
+                        <Download className="h-3 w-3" />
+                      </Button>
+                      
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onSave?.(imgUrl);
+                        }}
+                        className="h-7 w-7 p-0 bg-card/80 hover:bg-card"
+                      >
+                        <Save className="h-3 w-3" />
+                      </Button>
+                    </div>
+
+                    {/* Selection indicator */}
+                    <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-background/80 border border-border flex items-center justify-center text-xs font-medium">
+                      {index + 1}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           )}

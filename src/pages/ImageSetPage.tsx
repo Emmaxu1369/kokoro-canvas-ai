@@ -3,7 +3,9 @@ import Header from "@/components/Header";
 import ImageSetSidebar from "@/components/ImageSetSidebar";
 import EnhancedCutCard from "@/components/EnhancedCutCard";
 import BatchOperationsToolbar from "@/components/BatchOperationsToolbar";
+import EditModal from "@/components/EditModal";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Plus, Download, Video } from "lucide-react";
 
@@ -49,6 +51,8 @@ const ImageSetPage = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [cuts, setCuts] = useState<Cut[]>(mockCuts);
   const [selectedFrames, setSelectedFrames] = useState<string[]>([]);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editingFrame, setEditingFrame] = useState<Frame | null>(null);
 
   const handleFrameSelect = (frameId: string, selected: boolean) => {
     setSelectedFrames(prev => 
@@ -120,6 +124,18 @@ const ImageSetPage = () => {
           }
         : cut
     ));
+  };
+
+  const handleFrameEdit = (frameId: string) => {
+    // Find the frame to edit
+    for (const cut of cuts) {
+      const frame = cut.frames.find(f => f.id === frameId);
+      if (frame) {
+        setEditingFrame(frame);
+        setEditModalOpen(true);
+        break;
+      }
+    }
   };
 
   return (
@@ -194,7 +210,7 @@ const ImageSetPage = () => {
                   onFrameSelect={handleFrameSelect}
                   onFrameTagsChange={handleFrameTagsChange}
                   onFrameGenerate={handleFrameGenerate}
-                  onFrameEdit={(frameId) => console.log("Edit frame", frameId)}
+                  onFrameEdit={handleFrameEdit}
                   onFrameRetry={(frameId) => console.log("Retry frame", frameId)}
                   onFrameDownload={(frameId) => console.log("Download frame", frameId)}
                   onFramePreview={(frameId) => console.log("Preview frame", frameId)}
@@ -204,10 +220,43 @@ const ImageSetPage = () => {
                   }}
                 />
               ))}
+
+              {/* Add Cut Placeholder */}
+              <Card className="border-2 border-dashed border-border/50 hover:border-primary/50 transition-colors cursor-pointer group bg-card/20">
+                <CardContent 
+                  className="p-8 text-center"
+                  onClick={handleAddCut}
+                >
+                  <div className="flex flex-col items-center gap-3">
+                    <Plus className="h-12 w-12 text-muted-foreground group-hover:text-primary transition-colors" />
+                    <div>
+                      <h3 className="text-lg font-medium text-muted-foreground group-hover:text-primary transition-colors">
+                        Add New Cut
+                      </h3>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Create a new scene or sequence
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </ScrollArea>
         </div>
       </div>
+
+      {/* Edit Modal */}
+      <EditModal
+        isOpen={editModalOpen}
+        onClose={() => {
+          setEditModalOpen(false);
+          setEditingFrame(null);
+        }}
+        originalImage={editingFrame?.imageUrl}
+        currentImage={editingFrame?.imageUrl}
+        tags={editingFrame?.tags}
+        prompt={`Edit ${editingFrame?.title}`}
+      />
     </div>
   );
 };

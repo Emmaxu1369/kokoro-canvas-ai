@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Play, Edit, RotateCcw, Download, Eye } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Play, Edit, RotateCcw, Download, Eye, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import TagInput from "./TagInput";
 
@@ -40,6 +41,11 @@ const EnhancedFrameCard = ({
   className
 }: EnhancedFrameCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [showTagInput, setShowTagInput] = useState(false);
+  const [tagSuggestions] = useState([
+    "school uniform", "smiling", "long hair", "cat ears", "glasses", "classroom", 
+    "wide shot", "close-up", "portrait", "full body", "outdoor", "indoor"
+  ]);
 
   return (
     <Card 
@@ -67,100 +73,144 @@ const EnhancedFrameCard = ({
         {/* Image/Preview Area */}
         <div className="aspect-square rounded-lg overflow-hidden bg-muted/30 mb-3 relative group">
           {isGenerated && imageUrl ? (
-            <img 
-              src={imageUrl} 
-              alt={title}
-              className="w-full h-full object-cover"
-            />
+            /* Generated Image - Click to Edit */
+            <div 
+              className="w-full h-full cursor-pointer"
+              onClick={() => onEdit(id)}
+            >
+              <img 
+                src={imageUrl} 
+                alt={title}
+                className="w-full h-full object-cover hover:scale-105 transition-transform"
+              />
+              
+              {/* Hover overlay for generated images */}
+              <div className={cn(
+                "absolute inset-0 bg-black/50 flex items-center justify-center gap-2 transition-opacity",
+                isHovered ? "opacity-100" : "opacity-0"
+              )}>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onEdit(id);
+                  }}
+                  className="bg-card/80 hover:bg-card"
+                >
+                  <Edit className="h-4 w-4 mr-1" />
+                  Edit
+                </Button>
+              </div>
+            </div>
           ) : (
+            /* Preview Phase - Show tags overlay and blurred background */
             <div className="w-full h-full flex flex-col items-center justify-center relative">
-              {/* Blurred placeholder with tags overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-muted/50 to-muted/80 backdrop-blur-sm"></div>
+              {/* Blurred placeholder background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-muted/40 to-muted/70 backdrop-blur-sm"></div>
               
               {/* Tags overlay for non-generated frames */}
               {tags.length > 0 && (
                 <div className="relative z-10 text-center p-4">
-                  <div className="flex flex-wrap gap-1 justify-center">
-                    {tags.slice(0, 4).map((tag) => (
-                      <span
+                  <div className="flex flex-wrap gap-1 justify-center mb-3">
+                    {tags.slice(0, 3).map((tag) => (
+                      <button
                         key={tag}
-                        className="px-2 py-1 bg-primary/20 text-primary text-xs rounded-full"
+                        onClick={() => setShowTagInput(true)}
+                        className="px-2 py-1 bg-primary/20 text-primary text-xs rounded-full hover:bg-primary/30 transition-colors"
                       >
                         {tag}
-                      </span>
+                      </button>
                     ))}
-                    {tags.length > 4 && (
-                      <span className="px-2 py-1 bg-muted/50 text-muted-foreground text-xs rounded-full">
-                        +{tags.length - 4} more
-                      </span>
+                    {tags.length > 3 && (
+                      <button
+                        onClick={() => setShowTagInput(true)}
+                        className="px-2 py-1 bg-muted/50 text-muted-foreground text-xs rounded-full hover:bg-muted/70 transition-colors"
+                      >
+                        +{tags.length - 3} more
+                      </button>
                     )}
                   </div>
+                  <p className="text-xs text-muted-foreground">Click tags to edit</p>
                 </div>
               )}
+
+              {/* Empty state - show add tags button */}
+              {tags.length === 0 && (
+                <div className="relative z-10 text-center">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowTagInput(true)}
+                    className="bg-card/50 hover:bg-card/70"
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Tags
+                  </Button>
+                </div>
+              )}
+
+              {/* Generate button for non-generated frames */}
+              <div className={cn(
+                "absolute inset-0 bg-black/50 flex items-center justify-center transition-opacity",
+                isHovered ? "opacity-100" : "opacity-0"
+              )}>
+                <Button
+                  size="sm"
+                  onClick={() => onGenerate(id)}
+                  className="bg-primary hover:bg-primary/90"
+                >
+                  <Play className="h-4 w-4 mr-1" />
+                  Generate
+                </Button>
+              </div>
             </div>
           )}
-
-          {/* Hover Actions */}
-          <div className={cn(
-            "absolute inset-0 bg-black/50 flex items-center justify-center gap-2 transition-opacity",
-            isHovered ? "opacity-100" : "opacity-0"
-          )}>
-            {!isGenerated ? (
-              <Button
-                size="sm"
-                onClick={() => onGenerate(id)}
-                className="bg-primary hover:bg-primary/90"
-              >
-                <Play className="h-4 w-4 mr-1" />
-                Generate
-              </Button>
-            ) : (
-              <>
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  onClick={() => onPreview(id)}
-                  className="bg-card/80 hover:bg-card"
-                >
-                  <Eye className="h-4 w-4" />
-                </Button>
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  onClick={() => onEdit(id)}
-                  className="bg-card/80 hover:bg-card"
-                >
-                  <Edit className="h-4 w-4" />
-                </Button>
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  onClick={() => onRetry(id)}
-                  className="bg-card/80 hover:bg-card"
-                >
-                  <RotateCcw className="h-4 w-4" />
-                </Button>
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  onClick={() => onDownload(id)}
-                  className="bg-card/80 hover:bg-card"
-                >
-                  <Download className="h-4 w-4" />
-                </Button>
-              </>
-            )}
-          </div>
         </div>
 
-        {/* Tags Input - Only show for non-generated frames or always editable */}
-        <TagInput
-          tags={tags}
-          onTagsChange={(newTags) => onTagsChange(id, newTags)}
-          placeholder="Add frame tags..."
-          disabled={false} // Always allow editing
-          className="text-xs"
-        />
+        {/* Tag Input Field - Shown when tag is clicked */}
+        {showTagInput && !isGenerated && (
+          <div className="mb-3 p-3 bg-card/30 rounded-lg border border-border/50">
+            <TagInput
+              tags={tags}
+              onTagsChange={(newTags) => onTagsChange(id, newTags)}
+              placeholder="Add frame tags..."
+              suggestions={tagSuggestions}
+              className="mb-3"
+            />
+            <div className="flex gap-2">
+              <Button
+                size="sm"
+                onClick={() => {
+                  onGenerate(id);
+                  setShowTagInput(false);
+                }}
+                className="bg-primary hover:bg-primary/90 flex-1"
+              >
+                <Play className="h-4 w-4 mr-2" />
+                Generate This Frame
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setShowTagInput(false)}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Tags Input - Always show for generated frames for editing */}
+        {isGenerated && (
+          <TagInput
+            tags={tags}
+            onTagsChange={(newTags) => onTagsChange(id, newTags)}
+            placeholder="Add frame tags..."
+            disabled={false}
+            className="text-xs"
+          />
+        )}
       </CardContent>
     </Card>
   );

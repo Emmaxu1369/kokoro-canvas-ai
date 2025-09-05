@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, Image, Wand2, Edit3 } from "lucide-react";
+import { Send, Image, Wand2, Edit3, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
+import SettingsPanel from "./SettingsPanel";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 type ChatMode = "variation" | "remix";
 
@@ -23,6 +25,7 @@ const ChatInput = ({
 }: ChatInputProps) => {
   const [mode, setMode] = useState<ChatMode>("variation");
   const [message, setMessage] = useState("");
+  const [showSettings, setShowSettings] = useState(false);
 
   const modes = {
     variation: {
@@ -147,6 +150,15 @@ const ChatInput = ({
           </label>
           
           <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowSettings(!showSettings)}
+            className="h-8 w-8 p-0 text-muted-foreground hover:text-primary"
+          >
+            <Settings className="h-4 w-4" />
+          </Button>
+          
+          <Button
             onClick={handleSend}
             disabled={disabled || !message.trim()}
             size="sm"
@@ -161,6 +173,13 @@ const ChatInput = ({
       <p className="text-xs text-muted-foreground mt-2 text-center">
         {modes[mode].description}
       </p>
+
+      {/* Settings Panel */}
+      {showSettings && (
+        <div className="mt-4">
+          <SettingsPanel />
+        </div>
+      )}
     </div>
   );
 };
