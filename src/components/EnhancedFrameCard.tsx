@@ -14,6 +14,7 @@ interface EnhancedFrameCardProps {
   isGenerated: boolean;
   imageUrl?: string;
   isSelected: boolean;
+  globalGenerated?: boolean;
   onSelect: (id: string, selected: boolean) => void;
   onTagsChange: (id: string, tags: string[]) => void;
   onGenerate: (id: string) => void;
@@ -31,6 +32,7 @@ const EnhancedFrameCard = ({
   isGenerated,
   imageUrl,
   isSelected,
+  globalGenerated = false,
   onSelect,
   onTagsChange,
   onGenerate,
@@ -168,8 +170,8 @@ const EnhancedFrameCard = ({
           )}
         </div>
 
-        {/* Tag Input Field - Shown when tag is clicked */}
-        {showTagInput && !isGenerated && (
+        {/* Tag Input Field - Shown when tag is clicked and not globally generated */}
+        {showTagInput && !isGenerated && !globalGenerated && (
           <div className="mb-3 p-3 bg-card/30 rounded-lg border border-border/50">
             <TagInput
               tags={tags}

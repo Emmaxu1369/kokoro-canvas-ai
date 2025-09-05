@@ -48,11 +48,11 @@ const mockCuts: Cut[] = [
 ];
 
 const ImageSetPage = () => {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [cuts, setCuts] = useState<Cut[]>(mockCuts);
   const [selectedFrames, setSelectedFrames] = useState<string[]>([]);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editingFrame, setEditingFrame] = useState<Frame | null>(null);
+  const [isGenerated, setIsGenerated] = useState(false);
 
   const handleFrameSelect = (frameId: string, selected: boolean) => {
     setSelectedFrames(prev => 
@@ -91,6 +91,7 @@ const ImageSetPage = () => {
         imageUrl: "/placeholder.svg"
       }))
     })));
+    setIsGenerated(true);
   };
 
   const handleAddCut = () => {
@@ -143,12 +144,9 @@ const ImageSetPage = () => {
       <Header />
       
       <div className="flex h-screen pt-16">
-        <ImageSetSidebar 
-          isCollapsed={sidebarCollapsed}
-          onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
-        />
+        <ImageSetSidebar />
         
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col ml-80">
           {/* Batch Operations Toolbar */}
           {selectedFrames.length > 0 && (
             <BatchOperationsToolbar
@@ -169,15 +167,15 @@ const ImageSetPage = () => {
                   <Plus className="h-4 w-4" />
                   Add Cut
                 </Button>
+              </div>
+              
+              <div className="flex items-center gap-3">
                 <Button 
                   onClick={handleGenerateAll}
                   className="bg-primary hover:bg-primary/90"
                 >
                   Generate All
                 </Button>
-              </div>
-              
-              <div className="flex items-center gap-3">
                 <Button variant="outline" className="flex items-center gap-2">
                   <Download className="h-4 w-4" />
                   Download All
@@ -201,6 +199,7 @@ const ImageSetPage = () => {
                   description={cut.description}
                   frames={cut.frames}
                   selectedFrames={selectedFrames}
+                  isGenerated={isGenerated}
                   onTitleChange={(id, title) => {
                     setCuts(prev => prev.map(c => c.id === id ? { ...c, title } : c));
                   }}

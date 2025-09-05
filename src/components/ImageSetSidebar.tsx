@@ -8,12 +8,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 interface ImageSetSidebarProps {
-  isCollapsed?: boolean;
-  onToggle?: () => void;
   className?: string;
 }
 
-const ImageSetSidebar = ({ isCollapsed = false, onToggle, className }: ImageSetSidebarProps) => {
+const ImageSetSidebar = ({ className }: ImageSetSidebarProps) => {
   const [globalPrompt, setGlobalPrompt] = useState("");
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [settings, setSettings] = useState({
@@ -68,28 +66,10 @@ const ImageSetSidebar = ({ isCollapsed = false, onToggle, className }: ImageSetS
 
   return (
     <div className={cn(
-      "fixed left-0 top-0 h-full bg-card/80 backdrop-blur-sm border-r border-border/50 transition-all duration-300 z-40",
-      isCollapsed ? "w-16" : "w-80",
+      "fixed left-0 top-0 h-full bg-card/80 backdrop-blur-sm border-r border-border/50 w-80 z-40",
       className
     )}>
-      {/* Toggle Button */}
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={onToggle}
-        className="absolute -right-10 top-1/2 -translate-y-1/2 bg-card border border-border/50 rounded-r-lg rounded-l-none h-16 w-10 p-0"
-      >
-        {isCollapsed ? (
-          <ChevronRight className="h-4 w-4" />
-        ) : (
-          <ChevronLeft className="h-4 w-4" />
-        )}
-      </Button>
-
-      <div className={cn(
-        "h-full overflow-y-auto p-6 space-y-6",
-        isCollapsed && "opacity-0 pointer-events-none"
-      )}>
+      <div className="h-full overflow-y-auto p-6 space-y-6">
         {/* Header */}
         <div className="pt-16">
           <h2 className="text-lg font-semibold text-foreground mb-2">Image Set Generation</h2>

@@ -21,6 +21,7 @@ interface EnhancedCutCardProps {
   description: string;
   frames: Frame[];
   selectedFrames: string[];
+  isGenerated?: boolean;
   onTitleChange: (id: string, title: string) => void;
   onDescriptionChange: (id: string, description: string) => void;
   onFrameSelect: (frameId: string, selected: boolean) => void;
@@ -41,6 +42,7 @@ const EnhancedCutCard = ({
   description,
   frames,
   selectedFrames,
+  isGenerated = false,
   onTitleChange,
   onDescriptionChange,
   onFrameSelect,
@@ -181,6 +183,7 @@ const EnhancedCutCard = ({
               isGenerated={frame.isGenerated}
               imageUrl={frame.imageUrl}
               isSelected={selectedFrames.includes(frame.id)}
+              globalGenerated={isGenerated}
               onSelect={onFrameSelect}
               onTagsChange={onFrameTagsChange}
               onGenerate={onFrameGenerate}
