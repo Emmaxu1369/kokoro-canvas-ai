@@ -94,7 +94,7 @@ All colors MUST be HSL.
 
   /* Glow effects */
   .glow-primary {
-    @apply relative before:absolute before:inset-0 before:rounded-inherit before:bg-[var(--gradient-glow)] before:blur-xl before:-z-10;
+    @apply relative before:absolute before:inset-0 before:rounded-3xl before:bg-[var(--gradient-glow)] before:blur-xl before:-z-10;
   }
 
   /* Animated backgrounds */
