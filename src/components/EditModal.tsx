@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface EditHistory {
@@ -88,146 +90,116 @@ const EditModal = ({
           <DialogTitle className="text-xl font-semibold">Edit Frame</DialogTitle>
         </DialogHeader>
 
-        <div className="flex-1 grid grid-cols-3 gap-6 p-6 pt-0 overflow-hidden">
-          {/* Left Column - Original & Controls */}
-          <div className="space-y-4 overflow-y-auto">
-            {/* Original Image */}
-            <div className="space-y-2">
-              <h3 className="text-sm font-medium text-foreground">Original</h3>
-              <div className="aspect-square rounded-lg overflow-hidden bg-muted/30">
-                <img
-                  src={originalImage}
-                  alt="Original"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-
-            {/* Tags & Prompt */}
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <h3 className="text-sm font-medium text-foreground">Tags</h3>
-                <div className="flex flex-wrap gap-2">
-                  {editTags.map((tag) => (
-                    <Badge
-                      key={tag}
-                      variant="secondary"
-                      className="pr-1 bg-card hover:bg-card/80"
-                    >
-                      {tag}
-                      <button
-                        onClick={() => handleRemoveTag(tag)}
-                        className="ml-1 hover:bg-destructive/20 rounded-full p-0.5 transition-colors"
-                      >
-                        <X className="h-2 w-2" />
-                      </button>
-                    </Badge>
-                  ))}
-                </div>
-                
-                {/* Add new tag */}
-                <div className="flex gap-2">
-                  <Input
-                    value={newTag}
-                    onChange={(e) => setNewTag(e.target.value)}
-                    onKeyDown={handleKeyPress}
-                    placeholder="Add tag..."
-                    className="flex-1 h-8 text-sm"
-                  />
-                  <Button
-                    size="sm"
-                    onClick={handleAddTag}
-                    className="h-8 px-2"
-                  >
-                    <Plus className="h-3 w-3" />
-                  </Button>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <h3 className="text-sm font-medium text-foreground">Prompt</h3>
-                <Textarea
-                  value={editPrompt}
-                  onChange={(e) => setEditPrompt(e.target.value)}
-                  placeholder="Describe your edit..."
-                  className="min-h-[80px] text-sm"
-                />
-              </div>
-
-              <Button
-                onClick={handleApplyEdit}
-                className="w-full bg-gradient-primary hover:opacity-90"
-              >
-                Apply Edit
-              </Button>
-            </div>
-          </div>
-
-          {/* Center Column - Current Result */}
-          <div className="space-y-4">
-            <h3 className="text-sm font-medium text-foreground">Current Result</h3>
-            <div className="aspect-square rounded-lg overflow-hidden bg-muted/30">
-              <img
-                src={currentImage}
-                alt="Current result"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                onClick={onRetry}
-                className="flex-1"
-              >
-                <RotateCcw className="h-4 w-4 mr-2" />
-                Retry
-              </Button>
-              <Button
-                variant="outline"
-                onClick={onDownload}
-                className="flex-1"
-              >
-                <Download className="h-4 w-4 mr-2" />
-                Download
-              </Button>
-            </div>
-          </div>
-
-          {/* Right Column - Edit History */}
-          <div className="space-y-4 overflow-y-auto">
-            <h3 className="text-sm font-medium text-foreground">Edit History</h3>
-            <div className="space-y-3">
-              {mockHistory.map((item) => (
-                <div
-                  key={item.id}
-                  className="p-3 bg-card/30 rounded-lg hover:bg-card/50 transition-colors cursor-pointer"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-md overflow-hidden bg-muted/30 flex-shrink-0">
-                      <img
-                        src={item.imageUrl}
-                        alt="History"
+        <div className="flex gap-6 h-[500px]">
+          {/* Left Sidebar - History */}
+          <div className="w-60 space-y-4">
+            <Label className="text-sm font-medium">Edit History</Label>
+            <ScrollArea className="h-[450px]">
+              <div className="space-y-2 pr-4">
+                {editHistory.map((edit) => (
+                  <div key={edit.id} className="p-3 border border-border rounded-lg hover:bg-muted/50 transition-colors cursor-pointer">
+                    <div className="aspect-square rounded overflow-hidden bg-muted mb-2">
+                      <img 
+                        src={edit.imageUrl} 
+                        alt="Edit history" 
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs text-muted-foreground mb-1">
-                        {item.timestamp.toLocaleTimeString()}
-                      </p>
-                      <p className="text-sm text-foreground line-clamp-2">
-                        {item.prompt}
-                      </p>
-                    </div>
+                    <p className="text-xs text-muted-foreground mb-1">
+                      {edit.timestamp.toLocaleTimeString()}
+                    </p>
+                    <p className="text-xs line-clamp-2">
+                      {edit.prompt}
+                    </p>
                   </div>
-                </div>
-              ))}
-              
-              {mockHistory.length === 0 && (
-                <p className="text-sm text-muted-foreground text-center py-8">
-                  No edit history yet
-                </p>
-              )}
+                ))}
+                
+                {editHistory.length === 0 && (
+                  <p className="text-sm text-muted-foreground text-center py-8">
+                    No edit history yet
+                  </p>
+                )}
+              </div>
+            </ScrollArea>
+          </div>
+
+          {/* Right Side - Current Image & Controls */}
+          <div className="flex-1 space-y-4">
+            {/* Current Image */}
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">Current Image</Label>
+              <div className="aspect-square rounded-lg overflow-hidden bg-muted max-w-md mx-auto">
+                {currentImage && (
+                  <img 
+                    src={currentImage} 
+                    alt="Current result" 
+                    className="w-full h-full object-cover"
+                  />
+                )}
+              </div>
+            </div>
+
+            {/* Current Image Tags */}
+            <div className="space-y-2 max-w-md mx-auto">
+              <Label className="text-sm font-medium">Current Tags</Label>
+              <div className="flex flex-wrap gap-1 p-2 border border-border rounded-lg min-h-[40px]">
+                {editTags.map((tag, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleRemoveTag(tag)}
+                    className="px-2 py-1 bg-primary/20 text-primary text-xs rounded-full hover:bg-primary/30 transition-colors flex items-center gap-1"
+                  >
+                    {tag}
+                    <X className="w-3 h-3" />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Tag Input Field */}
+            <div className="space-y-2 max-w-md mx-auto">
+              <Label className="text-sm font-medium">Add Tags</Label>
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Add tag..."
+                  value={newTag}
+                  onChange={(e) => setNewTag(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  className="text-sm"
+                />
+                <Button size="sm" onClick={handleAddTag}>
+                  <Plus className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Prompt Input */}
+            <div className="space-y-2 max-w-md mx-auto">
+              <Label className="text-sm font-medium">Prompt</Label>
+              <textarea
+                value={editPrompt}
+                onChange={(e) => setEditPrompt(e.target.value)}
+                className="w-full h-20 p-2 border border-border rounded-lg bg-background text-sm resize-none"
+                placeholder="Describe the changes you want to make..."
+              />
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-2 max-w-md mx-auto">
+              <Button variant="outline" size="sm" className="flex-1">
+                <RotateCcw className="w-4 h-4 mr-2" />
+                Retry
+              </Button>
+              <Button variant="outline" size="sm" className="flex-1">
+                <Download className="w-4 h-4 mr-2" />
+                Download
+              </Button>
+              <Button 
+                onClick={handleApplyEdit}
+                className="flex-1 bg-primary hover:bg-primary/90"
+              >
+                Save
+              </Button>
             </div>
           </div>
         </div>

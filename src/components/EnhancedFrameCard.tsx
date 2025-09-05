@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { Play, Edit, RotateCcw, Download, Eye, Plus } from "lucide-react";
+import { Play, Edit, RotateCcw, Download, Eye, Plus, MoreHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
 import TagInput from "./TagInput";
 
@@ -15,6 +15,7 @@ interface EnhancedFrameCardProps {
   imageUrl?: string;
   isSelected: boolean;
   globalGenerated?: boolean;
+  previewMode?: boolean;
   onSelect: (id: string, selected: boolean) => void;
   onTagsChange: (id: string, tags: string[]) => void;
   onGenerate: (id: string) => void;
@@ -33,6 +34,7 @@ const EnhancedFrameCard = ({
   imageUrl,
   isSelected,
   globalGenerated = false,
+  previewMode = false,
   onSelect,
   onTagsChange,
   onGenerate,
@@ -75,35 +77,59 @@ const EnhancedFrameCard = ({
         {/* Image/Preview Area */}
         <div className="aspect-square rounded-lg overflow-hidden bg-muted/30 mb-3 relative group">
           {isGenerated && imageUrl ? (
-            /* Generated Image - Click to Edit */
-            <div 
-              className="w-full h-full cursor-pointer"
-              onClick={() => onEdit(id)}
-            >
+            /* Generated Image */
+            <div className="w-full h-full relative">
               <img 
                 src={imageUrl} 
                 alt={title}
-                className="w-full h-full object-cover hover:scale-105 transition-transform"
+                className="w-full h-full object-cover"
               />
               
-              {/* Hover overlay for generated images */}
-              <div className={cn(
-                "absolute inset-0 bg-black/50 flex items-center justify-center gap-2 transition-opacity",
-                isHovered ? "opacity-100" : "opacity-0"
-              )}>
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onEdit(id);
-                  }}
-                  className="bg-card/80 hover:bg-card"
-                >
-                  <Edit className="h-4 w-4 mr-1" />
-                  Edit
-                </Button>
-              </div>
+              {/* Preview Mode Overlays */}
+              {previewMode && (
+                <>
+                  {/* Bottom right menu */}
+                  <div className="absolute bottom-2 right-2">
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      className="bg-black/50 hover:bg-black/70 text-white"
+                    >
+                      <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  
+                  {/* Top right edit icon */}
+                  <div className="absolute top-2 right-2">
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      onClick={() => onEdit(id)}
+                      className="bg-black/50 hover:bg-black/70 text-white"
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </>
+              )}
+              
+              {/* Non-preview mode hover overlay */}
+              {!previewMode && (
+                <div className={cn(
+                  "absolute inset-0 bg-black/50 flex items-center justify-center gap-2 transition-opacity",
+                  isHovered ? "opacity-100" : "opacity-0"
+                )}>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={() => onEdit(id)}
+                    className="bg-card/80 hover:bg-card"
+                  >
+                    <Edit className="h-4 w-4 mr-1" />
+                    Edit
+                  </Button>
+                </div>
+              )}
             </div>
           ) : (
             /* Preview Phase - Show tags overlay and blurred background */
@@ -170,8 +196,8 @@ const EnhancedFrameCard = ({
           )}
         </div>
 
-        {/* Tag Input Field - Shown when tag is clicked and not globally generated */}
-        {showTagInput && !isGenerated && !globalGenerated && (
+        {/* Tag Input Field - Hidden in preview mode, shown when tag is clicked and not globally generated */}
+        {showTagInput && !isGenerated && !globalGenerated && !previewMode && (
           <div className="mb-3 p-3 bg-card/30 rounded-lg border border-border/50">
             <TagInput
               tags={tags}
@@ -203,8 +229,8 @@ const EnhancedFrameCard = ({
           </div>
         )}
 
-        {/* Tags Input - Always show for generated frames for editing */}
-        {isGenerated && (
+        {/* Tags Input - Show for generated frames only in non-preview mode */}
+        {isGenerated && !previewMode && (
           <TagInput
             tags={tags}
             onTagsChange={(newTags) => onTagsChange(id, newTags)}

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Header from "@/components/Header";
-import ChatSidebar from "@/components/ChatSidebar";
+import VariationSidebar from "@/components/VariationSidebar";
 import ChatMessage from "@/components/ChatMessage";
 import ChatInput from "@/components/ChatInput";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -16,7 +16,6 @@ interface Message {
 }
 
 const VariationPage = () => {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
@@ -27,6 +26,13 @@ const VariationPage = () => {
   ]);
   const [selectedImage, setSelectedImage] = useState<string>();
   const [isGenerating, setIsGenerating] = useState(false);
+  const [generationSettings, setGenerationSettings] = useState({
+    quantity: 3,
+    size: "1024x1024",
+    cfg: 7.5,
+    steps: 30,
+    seed: -1
+  });
 
   const handleSendMessage = (content: string, mode: "variation" | "remix") => {
     // Add user message
@@ -43,12 +49,8 @@ const VariationPage = () => {
 
     // Simulate AI response after delay
     setTimeout(() => {
-      // Generate 3 candidate images by default
-      const candidateImages = [
-        "/placeholder.svg",
-        "/placeholder.svg", 
-        "/placeholder.svg"
-      ];
+      // Generate candidate images based on settings
+      const candidateImages = Array.from({ length: generationSettings.quantity }, () => "/placeholder.svg");
 
       const systemMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -107,10 +109,10 @@ const VariationPage = () => {
       <Header />
       
       <div className="flex h-screen pt-16">
-        {/* Sidebar */}
-        <ChatSidebar
-          isCollapsed={sidebarCollapsed}
-          onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
+        {/* Fixed Sidebar */}
+        <VariationSidebar
+          currentImage={selectedImage}
+          onSettingsChange={setGenerationSettings}
         />
         
         {/* Main Chat Area */}
@@ -162,7 +164,7 @@ const VariationPage = () => {
                 onSendMessage={handleSendMessage}
                 onImageUpload={handleImageUpload}
                 disabled={isGenerating}
-                selectedImage={selectedImage}
+                selectedImage={undefined}
                 onClearImage={() => setSelectedImage(undefined)}
               />
             </div>

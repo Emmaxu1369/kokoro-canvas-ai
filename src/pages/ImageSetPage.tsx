@@ -7,7 +7,8 @@ import EditModal from "@/components/EditModal";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Plus, Download, Video } from "lucide-react";
+import { Plus, Download, Play, ZoomIn, ZoomOut, MoreHorizontal, Edit } from "lucide-react";
+import { Slider } from "@/components/ui/slider";
 
 interface Frame {
   id: string;
@@ -49,10 +50,15 @@ const mockCuts: Cut[] = [
 
 const ImageSetPage = () => {
   const [cuts, setCuts] = useState<Cut[]>(mockCuts);
+  const [globalGenerated, setGlobalGenerated] = useState(false);
   const [selectedFrames, setSelectedFrames] = useState<string[]>([]);
+  const [previewMode, setPreviewMode] = useState(false);
+  const [zoomLevel, setZoomLevel] = useState(50);
+  const [uploadedImage, setUploadedImage] = useState<string>();
+  
+  // Edit modal state
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [editingFrame, setEditingFrame] = useState<Frame | null>(null);
-  const [isGenerated, setIsGenerated] = useState(false);
+  const [editingFrame, setEditingFrame] = useState<any>(null);
 
   const handleFrameSelect = (frameId: string, selected: boolean) => {
     setSelectedFrames(prev => 
@@ -83,15 +89,35 @@ const ImageSetPage = () => {
   };
 
   const handleGenerateAll = () => {
-    setCuts(prev => prev.map(cut => ({
+    setGlobalGenerated(true);
+    setPreviewMode(true);
+    // Simulate generation for all frames
+    const updatedCuts = cuts.map(cut => ({
       ...cut,
       frames: cut.frames.map(frame => ({
         ...frame,
         isGenerated: true,
-        imageUrl: "/placeholder.svg"
+        imageUrl: "/placeholder.svg" // Simulate generated image
       }))
-    })));
-    setIsGenerated(true);
+    }));
+    setCuts(updatedCuts);
+  };
+
+  const handleImageUpload = (file: File) => {
+    const url = URL.createObjectURL(file);
+    setUploadedImage(url);
+    
+    // Auto-populate Cut1 Frame1 with uploaded image variant
+    const updatedCuts = [...cuts];
+    if (updatedCuts[0]?.frames[0]) {
+      updatedCuts[0].frames[0] = {
+        ...updatedCuts[0].frames[0],
+        isGenerated: true,
+        imageUrl: url,
+        tags: ["uploaded image", "base variant"]
+      };
+    }
+    setCuts(updatedCuts);
   };
 
   const handleAddCut = () => {
@@ -139,58 +165,65 @@ const ImageSetPage = () => {
     }
   };
 
+  const handleFrameRetry = (frameId: string) => {
+    console.log("Retry frame", frameId);
+  };
+
+  const handleFrameDownload = (frameId: string) => {
+    console.log("Download frame", frameId);
+  };
+
+  const handleFramePreview = (frameId: string) => {
+    console.log("Preview frame", frameId);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
       
       <div className="flex h-screen pt-16">
+        {/* Fixed Sidebar */}
         <ImageSetSidebar />
         
-        <div className="flex-1 flex flex-col ml-80">
-          {/* Batch Operations Toolbar */}
-          {selectedFrames.length > 0 && (
-            <BatchOperationsToolbar
-              selectedCount={selectedFrames.length}
-              onSaveTemplate={() => console.log("Save template")}
-              onAddTag={() => console.log("Add tag")}
-              onReplaceTag={() => console.log("Replace tag")}
-              onDeleteAll={() => console.log("Delete frames")}
-              onClearSelection={() => setSelectedFrames([])}
-            />
-          )}
-
-          {/* Main Controls */}
-          <div className="border-b border-border/50 bg-card/20 backdrop-blur-sm p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Button onClick={handleAddCut} className="flex items-center gap-2">
-                  <Plus className="h-4 w-4" />
-                  Add Cut
-                </Button>
-              </div>
-              
-              <div className="flex items-center gap-3">
-                <Button 
-                  onClick={handleGenerateAll}
-                  className="bg-primary hover:bg-primary/90"
-                >
-                  Generate All
-                </Button>
-                <Button variant="outline" className="flex items-center gap-2">
-                  <Download className="h-4 w-4" />
-                  Download All
-                </Button>
-                <Button variant="outline" className="flex items-center gap-2">
-                  <Video className="h-4 w-4" />
-                  Generate Video
-                </Button>
-              </div>
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col">
+          {/* Top Controls */}
+          <div className="p-4 border-b border-border/50 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              {/* Empty left side for future controls */}
+            </div>
+            
+            <div className="flex items-center gap-2">
+              {previewMode && (
+                <>
+                  <div className="flex items-center gap-2 mr-4">
+                    <ZoomOut className="w-4 h-4 text-muted-foreground" />
+                    <Slider
+                      value={[zoomLevel]}
+                      onValueChange={(value) => setZoomLevel(value[0])}
+                      min={25}
+                      max={200}
+                      step={25}
+                      className="w-24"
+                    />
+                    <ZoomIn className="w-4 h-4 text-muted-foreground" />
+                    <span className="text-xs text-muted-foreground w-12">{zoomLevel}%</span>
+                  </div>
+                </>
+              )}
+              <Button
+                onClick={handleGenerateAll}
+                className="bg-primary hover:bg-primary/90 text-primary-foreground flex items-center gap-2"
+              >
+                <Play className="w-4 h-4" />
+                Generate All
+              </Button>
             </div>
           </div>
 
-          {/* Cuts and Frames */}
-          <ScrollArea className="flex-1 p-6">
-            <div className="space-y-8 max-w-7xl mx-auto">
+          {/* Content Area */}
+          <div className="flex-1 overflow-auto p-6">
+            <div className="space-y-8" style={{ transform: `scale(${zoomLevel / 100})`, transformOrigin: 'top left' }}>
               {cuts.map((cut) => (
                 <EnhancedCutCard
                   key={cut.id}
@@ -199,7 +232,8 @@ const ImageSetPage = () => {
                   description={cut.description}
                   frames={cut.frames}
                   selectedFrames={selectedFrames}
-                  isGenerated={isGenerated}
+                  isGenerated={globalGenerated}
+                  previewMode={previewMode}
                   onTitleChange={(id, title) => {
                     setCuts(prev => prev.map(c => c.id === id ? { ...c, title } : c));
                   }}
@@ -210,37 +244,26 @@ const ImageSetPage = () => {
                   onFrameTagsChange={handleFrameTagsChange}
                   onFrameGenerate={handleFrameGenerate}
                   onFrameEdit={handleFrameEdit}
-                  onFrameRetry={(frameId) => console.log("Retry frame", frameId)}
-                  onFrameDownload={(frameId) => console.log("Download frame", frameId)}
-                  onFramePreview={(frameId) => console.log("Preview frame", frameId)}
+                  onFrameRetry={handleFrameRetry}
+                  onFrameDownload={handleFrameDownload}
+                  onFramePreview={handleFramePreview}
                   onAddFrame={handleAddFrame}
                   onDelete={(id) => {
                     setCuts(prev => prev.filter(c => c.id !== id));
                   }}
                 />
               ))}
-
+              
               {/* Add Cut Placeholder */}
-              <Card className="border-2 border-dashed border-border/50 hover:border-primary/50 transition-colors cursor-pointer group bg-card/20">
-                <CardContent 
-                  className="p-8 text-center"
-                  onClick={handleAddCut}
-                >
-                  <div className="flex flex-col items-center gap-3">
-                    <Plus className="h-12 w-12 text-muted-foreground group-hover:text-primary transition-colors" />
-                    <div>
-                      <h3 className="text-lg font-medium text-muted-foreground group-hover:text-primary transition-colors">
-                        Add New Cut
-                      </h3>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        Create a new scene or sequence
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <div 
+                className="border-2 border-dashed border-border/50 rounded-lg p-8 text-center hover:border-primary/50 transition-colors cursor-pointer"
+                onClick={handleAddCut}
+              >
+                <Plus className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+                <p className="text-sm text-muted-foreground">Add New Cut</p>
+              </div>
             </div>
-          </ScrollArea>
+          </div>
         </div>
       </div>
 
