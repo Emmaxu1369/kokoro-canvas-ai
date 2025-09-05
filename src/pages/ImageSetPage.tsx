@@ -207,37 +207,39 @@ const ImageSetPage = () => {
                 <Button onClick={handleGenerateAll}>
                   Generate All
                 </Button>
-                <Button 
-                  variant="outline" 
-                  onClick={handleDownloadAll}
-                >
-                  Download All
-                </Button>
               </div>
             )}
           </div>
 
           {/* Multi-select bar */}
           {selectedFrames.length > 0 && allGenerated && (
-            <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 bg-primary text-primary-foreground px-6 py-3 rounded-full shadow-lg flex items-center gap-4">
+            <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 bg-background border-2 border-dashed border-primary text-foreground px-6 py-3 rounded-lg shadow-lg flex items-center gap-4">
               <span>Selected {selectedFrames.length} images</span>
               <div className="flex gap-2">
-                <Button size="sm" variant="secondary" onClick={() => console.log("Retry")}>
+                <Button size="sm" variant="outline" onClick={() => console.log("Retry")}>
                   Retry
                 </Button>
-                <Button size="sm" variant="secondary" onClick={() => console.log("Delete")}>
+                <Button size="sm" variant="outline" onClick={() => console.log("Delete")}>
                   Delete
                 </Button>
-                <Button size="sm" variant="secondary" onClick={() => console.log("Add Tag")}>
-                  Add Tag
+                <Button size="sm" variant="outline" onClick={() => console.log("Replace Tag")}>
+                  Replace Tag
                 </Button>
-                <Button size="sm" variant="secondary" onClick={() => console.log("Download")}>
+                <Button size="sm" variant="outline" onClick={() => console.log("Download")}>
                   Download
                 </Button>
-                <Button size="sm" variant="secondary" onClick={() => console.log("Share")}>
+                <Button size="sm" variant="outline" onClick={() => console.log("Share")}>
                   Share
                 </Button>
               </div>
+              <Button 
+                size="sm" 
+                variant="ghost" 
+                onClick={() => setSelectedFrames([])}
+                className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground"
+              >
+                ✕
+              </Button>
             </div>
           )}
 
@@ -261,12 +263,16 @@ const ImageSetPage = () => {
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                <div 
+                  className="grid gap-4" 
+                  style={{ 
+                    gridTemplateColumns: `repeat(auto-fit, minmax(${Math.max(150, 300 * zoomLevel / 100)}px, 1fr))` 
+                  }}
+                >
                   {cuts.flatMap(cut => cut.frames.filter(frame => frame.isGenerated)).map((frame) => (
                     <div key={frame.id} className="group relative">
                       <div 
                         className="aspect-square bg-muted rounded-lg overflow-hidden cursor-pointer border-2 border-transparent hover:border-primary/50 transition-colors"
-                        style={{ transform: `scale(${zoomLevel / 100})` }}
                         onClick={() => handleFrameSelect(frame.id, !selectedFrames.includes(frame.id))}
                       >
                         {frame.imageUrl ? (
@@ -278,11 +284,24 @@ const ImageSetPage = () => {
                         {selectedFrames.includes(frame.id) && (
                           <div className="absolute inset-0 bg-primary/20 border-2 border-primary" />
                         )}
-                        
-                        <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Button size="sm" variant="secondary" className="h-6 w-6 p-0">
+                      </div>
+                      
+                      {/* Three dots menu below image */}
+                      <div className="flex justify-center mt-2">
+                        <div className="relative">
+                          <Button 
+                            size="sm" 
+                            variant="ghost" 
+                            className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              // TODO: Show dropdown menu
+                              console.log("Show menu for frame", frame.id);
+                            }}
+                          >
                             ⋯
                           </Button>
+                          {/* TODO: Add dropdown menu with: Edit, Download, Retry, Share, Duplicate, Add More */}
                         </div>
                       </div>
                     </div>
@@ -315,6 +334,15 @@ const ImageSetPage = () => {
                     onDelete={(cutId) => setCuts(prev => prev.filter(c => c.id !== cutId))}
                   />
                 ))}
+                
+                {/* Add new cut button */}
+                <div 
+                  className="border-2 border-dashed border-muted-foreground/30 rounded-xl p-8 flex flex-col items-center justify-center min-h-[200px] hover:border-primary/50 transition-colors cursor-pointer"
+                  onClick={handleAddCut}
+                >
+                  <Plus className="w-8 h-8 text-muted-foreground mb-2" />
+                  <span className="text-muted-foreground">Add New Cut</span>
+                </div>
               </>
             )}
           </div>

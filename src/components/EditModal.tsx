@@ -85,79 +85,48 @@ const EditModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl h-[90vh] p-0 overflow-hidden">
-        <DialogHeader className="p-6 pb-0">
-          <DialogTitle className="text-xl font-semibold">Edit Frame</DialogTitle>
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden">
+        <DialogHeader>
+          <DialogTitle>Edit Image</DialogTitle>
         </DialogHeader>
-
-        <div className="flex gap-6 h-[500px]">
-          {/* Left Sidebar - History */}
-          <div className="w-60 space-y-4">
-            <Label className="text-sm font-medium">Edit History</Label>
-            <ScrollArea className="h-[450px]">
-              <div className="space-y-2 pr-4">
-                {editHistory.map((edit) => (
-                  <div key={edit.id} className="p-3 border border-border rounded-lg hover:bg-muted/50 transition-colors cursor-pointer">
-                    <div className="aspect-square rounded overflow-hidden bg-muted mb-2">
-                      <img 
-                        src={edit.imageUrl} 
-                        alt="Edit history" 
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <p className="text-xs text-muted-foreground mb-1">
-                      {edit.timestamp.toLocaleTimeString()}
-                    </p>
-                    <p className="text-xs line-clamp-2">
-                      {edit.prompt}
-                    </p>
-                  </div>
-                ))}
-                
-                {editHistory.length === 0 && (
-                  <p className="text-sm text-muted-foreground text-center py-8">
-                    No edit history yet
-                  </p>
-                )}
-              </div>
-            </ScrollArea>
-          </div>
-
-          {/* Right Side - Current Image & Controls */}
-          <div className="flex-1 p-6">
-            <div className="flex gap-4">
-              <div className="flex-1">
-                <div className="aspect-square bg-muted rounded-lg overflow-hidden mb-6">
-                  {currentImage ? (
-                    <img src={currentImage} alt="Current image" className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
-                      <span className="text-muted-foreground">No image</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-              
-              <div className="flex flex-col gap-2 justify-center">
-                <Button onClick={() => onRetry?.()}>
-                  Retry
-                </Button>
-                <Button onClick={() => onSave?.()}>
-                  Save
-                </Button>
-                <Button variant="outline" onClick={() => console.log("Share")}>
-                  Share
-                </Button>
-                <Button variant="outline" onClick={() => console.log("Confirm")}>
-                  Confirm
-                </Button>
-              </div>
+        
+        <div className="flex flex-col gap-6 h-[70vh]">
+          {/* Center - Current/Edited image with side buttons */}
+          <div className="flex gap-4">
+            <div className="flex-1 bg-muted rounded-lg flex items-center justify-center overflow-hidden">
+              {currentImage ? (
+                <img 
+                  src={currentImage} 
+                  alt="Current" 
+                  className="max-w-full max-h-full object-contain"
+                />
+              ) : (
+                <div className="text-muted-foreground">No current image</div>
+              )}
             </div>
-
-            {/* Current Image Tags */}
-            <div className="space-y-2 max-w-md mx-auto">
-              <Label className="text-sm font-medium">Current Tags</Label>
-              <div className="flex flex-wrap gap-1 p-2 border border-border rounded-lg min-h-[40px]">
+            
+            {/* Side buttons */}
+            <div className="flex flex-col gap-2 justify-center">
+              <Button onClick={() => onRetry?.()}>
+                Retry
+              </Button>
+              <Button onClick={() => console.log("Download")}>
+                Download
+              </Button>
+              <Button variant="outline" onClick={() => console.log("Share")}>
+                Share
+              </Button>
+              <Button onClick={() => console.log("Confirm")}>
+                Confirm
+              </Button>
+            </div>
+          </div>
+          
+          {/* Bottom - Tags and Inputs */}
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium mb-2 block">Tags</label>
+              <div className="flex flex-wrap gap-2 mb-2">
                 {editTags.map((tag, index) => (
                   <button
                     key={index}
@@ -169,11 +138,6 @@ const EditModal = ({
                   </button>
                 ))}
               </div>
-            </div>
-
-            {/* Tag Input Field */}
-            <div className="space-y-2 max-w-md mx-auto">
-              <Label className="text-sm font-medium">Add Tags</Label>
               <div className="flex gap-2">
                 <Input
                   placeholder="Add tag..."
@@ -187,47 +151,18 @@ const EditModal = ({
                 </Button>
               </div>
             </div>
-
-            {/* Prompt Input */}
-            <div className="space-y-2 max-w-md mx-auto">
-              <Label className="text-sm font-medium">Prompt</Label>
-              <textarea
+            
+            <div>
+              <label className="text-sm font-medium mb-2 block">Prompt</label>
+              <textarea 
                 value={editPrompt}
                 onChange={(e) => setEditPrompt(e.target.value)}
-                className="w-full h-20 p-2 border border-border rounded-lg bg-background text-sm resize-none"
-                placeholder="Describe the changes you want to make..."
+                placeholder="Describe how you'd like to modify the image..."
+                rows={3}
+                className="w-full px-3 py-2 bg-input border border-border rounded-md resize-none"
               />
             </div>
-
-            {/* Action Buttons */}
-            <div className="flex gap-2 max-w-md mx-auto">
-              <Button variant="outline" size="sm" className="flex-1">
-                <RotateCcw className="w-4 h-4 mr-2" />
-                Retry
-              </Button>
-              <Button variant="outline" size="sm" className="flex-1">
-                <Download className="w-4 h-4 mr-2" />
-                Download
-              </Button>
-              <Button 
-                onClick={handleApplyEdit}
-                className="flex-1 bg-primary hover:bg-primary/90"
-              >
-                Save
-              </Button>
-            </div>
           </div>
-        </div>
-
-        {/* Footer */}
-        <div className="flex items-center justify-between p-6 pt-0 border-t border-border/50">
-          <Button variant="outline" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button onClick={onSave} className="bg-gradient-primary hover:opacity-90">
-            <Save className="h-4 w-4 mr-2" />
-            Save Changes
-          </Button>
         </div>
       </DialogContent>
     </Dialog>

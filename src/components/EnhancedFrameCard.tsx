@@ -179,19 +179,21 @@ const EnhancedFrameCard = ({
               )}
 
               {/* Generate button for non-generated frames */}
-              <div className={cn(
-                "absolute inset-0 bg-black/50 flex items-center justify-center transition-opacity",
-                isHovered ? "opacity-100" : "opacity-0"
-              )}>
-                <Button
-                  size="sm"
-                  onClick={() => onGenerate(id)}
-                  className="bg-primary hover:bg-primary/90"
-                >
-                  <Play className="h-4 w-4 mr-1" />
-                  Generate
-                </Button>
-              </div>
+              {!isGenerated && !previewMode && (
+                <div className={cn(
+                  "absolute inset-0 bg-black/50 flex items-center justify-center transition-opacity",
+                  isHovered ? "opacity-100" : "opacity-0"
+                )}>
+                  <Button
+                    size="sm"
+                    onClick={() => onGenerate(id)}
+                    className="bg-primary hover:bg-primary/90"
+                  >
+                    <Play className="h-4 w-4 mr-1" />
+                    Generate
+                  </Button>
+                </div>
+              )}
             </div>
           )}
         </div>

@@ -41,18 +41,16 @@ const Index = () => {
 
         {/* Demo Content */}
         <div className="max-w-2xl mx-auto">
-          <div className={`bg-card rounded-lg p-8 shadow-lg transition-all duration-300 ${
-            activeDemo ? "animate-pulse" : ""
-          }`}>
+          <div className="bg-card rounded-lg p-8 shadow-lg transition-all duration-500 animate-breathe">
             <img 
               src={demoContent[activeDemo as keyof typeof demoContent].image} 
               alt={demoContent[activeDemo as keyof typeof demoContent].title}
-              className="w-full h-64 object-cover rounded-lg mb-4"
+              className="w-full h-64 object-cover rounded-lg mb-4 transition-all duration-500"
             />
-            <h3 className="text-2xl font-semibold text-foreground mb-2">
+            <h3 className="text-2xl font-semibold text-foreground mb-2 transition-all duration-300">
               {demoContent[activeDemo as keyof typeof demoContent].title}
             </h3>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground transition-all duration-300">
               {demoContent[activeDemo as keyof typeof demoContent].description}
             </p>
           </div>
@@ -65,9 +63,8 @@ const Index = () => {
           <Button 
             size="lg" 
             variant={activeDemo === "variation" ? "default" : "outline"}
-            className={`px-8 py-6 text-lg transition-all duration-300 ${
-              activeDemo === "variation" ? "animate-pulse" : ""
-            }`}
+            className="px-8 py-6 text-lg transition-all duration-300"
+            onMouseEnter={() => setActiveDemo("variation")}
             onClick={() => setActiveDemo("variation")}
             asChild
           >
@@ -76,9 +73,8 @@ const Index = () => {
           <Button 
             size="lg" 
             variant={activeDemo === "storyflow" ? "default" : "outline"}
-            className={`px-8 py-6 text-lg transition-all duration-300 ${
-              activeDemo === "storyflow" ? "animate-pulse" : ""
-            }`}
+            className="px-8 py-6 text-lg transition-all duration-300"
+            onMouseEnter={() => setActiveDemo("storyflow")}
             onClick={() => setActiveDemo("storyflow")}
             asChild
           >
@@ -87,9 +83,8 @@ const Index = () => {
           <Button 
             size="lg" 
             variant={activeDemo === "fast" ? "default" : "outline"}
-            className={`px-8 py-6 text-lg transition-all duration-300 relative overflow-hidden ${
-              activeDemo === "fast" ? "animate-pulse" : ""
-            }`}
+            className="px-8 py-6 text-lg transition-all duration-300 relative overflow-hidden"
+            onMouseEnter={() => setActiveDemo("fast")}
             onClick={() => setActiveDemo("fast")}
             asChild
           >
