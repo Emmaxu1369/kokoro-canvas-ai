@@ -319,6 +319,7 @@ const ImageSetPage = () => {
             )}
           </div>
         </div>
+        </div>
       </div>
 
       {/* Edit Modal */}

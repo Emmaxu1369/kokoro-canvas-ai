@@ -139,10 +139,10 @@ const EditModal = ({
               </div>
               
               <div className="flex flex-col gap-2 justify-center">
-                <Button onClick={() => onRetry?.(currentImage || "")}>
+                <Button onClick={() => onRetry?.()}>
                   Retry
                 </Button>
-                <Button onClick={() => onSave?.(currentImage || "")}>
+                <Button onClick={() => onSave?.()}>
                   Save
                 </Button>
                 <Button variant="outline" onClick={() => console.log("Share")}>
