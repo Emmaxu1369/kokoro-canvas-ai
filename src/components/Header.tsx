@@ -1,14 +1,19 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, Globe } from "lucide-react";
 import LoginModal from "./LoginModal";
+import { useState } from "react";
 
-const Header = () => {
-  const [currentLanguage, setCurrentLanguage] = useState<"en" | "jp">("en");
+interface HeaderProps {
+  currentLanguage: "en" | "jp";
+  onLanguageChange: (language: "en" | "jp") => void;
+}
+
+const Header = ({ currentLanguage, onLanguageChange }: HeaderProps) => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   const toggleLanguage = () => {
-    setCurrentLanguage(currentLanguage === "en" ? "jp" : "en");
+    const newLanguage = currentLanguage === "en" ? "jp" : "en";
+    onLanguageChange(newLanguage);
     // Simulate page refresh
     window.location.reload();
   };

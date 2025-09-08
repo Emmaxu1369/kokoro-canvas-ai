@@ -45,21 +45,14 @@ const DemoTreeSidebar = ({ activeDemo, onDemoChange, language }: DemoTreeSidebar
   };
 
   return (
-    <div className="w-80 bg-card/20 backdrop-blur-xl rounded-3xl border border-border/30 p-8">
-      <div className="space-y-6">
-        <div className="text-center">
-          <h3 className="text-lg font-semibold text-foreground mb-2">
-            {language === "en" ? "AI Creation Pipeline" : "AI創作パイプライン"}
-          </h3>
-          <div className="w-16 h-1 bg-gradient-to-r from-primary to-accent rounded-full mx-auto"></div>
-        </div>
-
-        {/* Tree Structure */}
-        <div className="relative pl-6">
-          {/* Main trunk */}
-          <div className="absolute left-6 top-8 bottom-8 w-0.5 bg-gradient-to-b from-primary/60 via-primary/40 to-border/30"></div>
+    <div className="w-80 lg:w-96">
+      <div className="space-y-8">
+        {/* Tree Structure with organic branches */}
+        <div className="relative pl-8">
+          {/* Main organic trunk */}
+          <div className="absolute left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-primary/70 via-primary/50 to-muted/30 rounded-full"></div>
           
-          <div className="space-y-6">
+          <div className="space-y-8">
             {features.map((feature, index) => {
               const Icon = feature.icon;
               const isActive = activeDemo === feature.id;
@@ -69,71 +62,69 @@ const DemoTreeSidebar = ({ activeDemo, onDemoChange, language }: DemoTreeSidebar
               
               return (
                 <div key={feature.id} className="relative">
-                  {/* Branch line */}
-                  <div 
-                    className={cn(
-                      "absolute left-0 top-6 w-6 h-0.5 transition-all duration-500",
-                      isLit ? "bg-primary/80" : "bg-border/30"
-                    )}
-                  />
-                  
-                  {/* Sub-branches for hierarchical levels */}
-                  {level > 0 && (
-                    <>
+                  {/* Organic branch lines */}
+                  <div className="absolute left-0 top-1/2 flex items-center">
+                    {/* Main branch */}
+                    <div 
+                      className={cn(
+                        "h-0.5 rounded-full transition-all duration-700",
+                        isLit ? "bg-gradient-to-r from-primary to-accent w-12" : "bg-border/40 w-8"
+                      )}
+                    />
+                    
+                    {/* Branch curves for organic feel */}
+                    {level > 0 && (
                       <div 
                         className={cn(
-                          "absolute -left-3 top-6 w-3 h-0.5 transition-all duration-500",
-                          isLit ? "bg-primary/60" : "bg-border/20"
+                          "absolute -left-4 w-4 h-4 border-l-2 border-b-2 rounded-bl-full transition-all duration-700",
+                          isLit ? "border-primary/60" : "border-border/20"
                         )}
+                        style={{ 
+                          transform: `rotate(${level * 15}deg)`,
+                          top: `-${level * 4}px`
+                        }}
                       />
-                      {level > 1 && (
-                        <div 
-                          className={cn(
-                            "absolute -left-6 top-6 w-3 h-0.5 transition-all duration-500",
-                            isLit ? "bg-primary/40" : "bg-border/20"
-                          )}
-                        />
-                      )}
-                    </>
-                  )}
+                    )}
+                  </div>
                   
                   <div
                     className={cn(
-                      "relative flex items-center space-x-4 p-4 rounded-2xl cursor-pointer transition-all duration-500 ml-8",
+                      "relative flex items-center space-x-6 p-6 rounded-3xl cursor-pointer transition-all duration-700 ml-16",
+                      "backdrop-blur-md border border-border/20",
                       isActive 
-                        ? "bg-primary/15 border border-primary/40 shadow-2xl scale-105 translate-x-2" 
+                        ? "bg-gradient-to-r from-primary/20 to-accent/20 border-primary/50 shadow-[var(--shadow-primary)] scale-105 translate-x-4" 
                         : isLit 
-                          ? "bg-primary/5 border border-primary/20 hover:bg-primary/10 hover:scale-102"
-                          : "bg-muted/10 border border-transparent hover:bg-muted/20",
+                          ? "bg-card/60 border-primary/30 hover:bg-primary/10 hover:scale-102 hover:shadow-[var(--shadow-soft)]"
+                          : "bg-card/30 hover:bg-card/50",
                       isComingSoon && "opacity-60 cursor-not-allowed"
                     )}
                     onMouseEnter={() => !isComingSoon && onDemoChange(feature.id)}
                   >
-                    {/* Node Circle with glow effect */}
+                    {/* Modern node with organic glow */}
                     <div className={cn(
-                      "relative flex items-center justify-center w-12 h-12 rounded-full transition-all duration-500",
+                      "relative flex items-center justify-center w-16 h-16 rounded-2xl transition-all duration-700",
                       isActive 
-                        ? "bg-primary text-primary-foreground shadow-lg" 
+                        ? "bg-gradient-to-br from-primary to-accent text-primary-foreground shadow-lg rotate-3" 
                         : isLit
-                          ? "bg-primary/20 text-primary border-2 border-primary/30"
+                          ? "bg-gradient-to-br from-primary/30 to-accent/30 text-primary border-2 border-primary/40"
                           : "bg-muted/50 text-muted-foreground",
                       isComingSoon && "bg-muted/30"
                     )}>
-                      <Icon className="w-5 h-5" />
+                      <Icon className="w-7 h-7" />
                       
-                      {/* Glow effect for active/lit nodes */}
+                      {/* Organic glow effect */}
                       {(isActive || isLit) && !isComingSoon && (
-                        <div className="absolute inset-0 rounded-full bg-primary/20 animate-pulse blur-sm -z-10"></div>
+                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/30 to-accent/30 animate-pulse blur-lg -z-10"></div>
                       )}
                     </div>
 
                     {/* Feature Info */}
                     <div className="flex-1">
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-3">
                         <h4 className={cn(
-                          "font-medium transition-colors duration-500",
+                          "text-lg font-semibold transition-colors duration-700",
                           isActive 
-                            ? "text-primary font-semibold" 
+                            ? "text-primary" 
                             : isLit 
                               ? "text-foreground"
                               : "text-muted-foreground"
@@ -141,9 +132,9 @@ const DemoTreeSidebar = ({ activeDemo, onDemoChange, language }: DemoTreeSidebar
                           {feature.name[language]}
                         </h4>
                         {isComingSoon && (
-                          <div className="flex items-center space-x-1 px-2 py-1 bg-muted/50 rounded-full">
-                            <Clock className="w-3 h-3 text-muted-foreground" />
-                            <span className="text-xs text-muted-foreground">
+                          <div className="flex items-center space-x-2 px-3 py-1 bg-muted/60 rounded-full">
+                            <Clock className="w-4 h-4 text-muted-foreground" />
+                            <span className="text-sm text-muted-foreground font-medium">
                               {language === "en" ? "Soon" : "準備中"}
                             </span>
                           </div>
@@ -151,18 +142,18 @@ const DemoTreeSidebar = ({ activeDemo, onDemoChange, language }: DemoTreeSidebar
                       </div>
                     </div>
 
-                    {/* Active Indicator */}
+                    {/* Active organic indicator */}
                     {isActive && (
-                      <div className="absolute -right-2 top-1/2 transform -translate-y-1/2">
-                        <div className="w-4 h-4 bg-primary rounded-full animate-pulse"></div>
-                        <div className="absolute inset-0 w-4 h-4 bg-primary rounded-full animate-ping opacity-75"></div>
+                      <div className="absolute -right-4 top-1/2 transform -translate-y-1/2">
+                        <div className="w-6 h-6 bg-gradient-to-r from-primary to-accent rounded-full animate-pulse shadow-lg"></div>
+                        <div className="absolute inset-0 w-6 h-6 bg-gradient-to-r from-primary to-accent rounded-full animate-ping opacity-60"></div>
                       </div>
                     )}
                     
-                    {/* Electricity effect for lit nodes */}
+                    {/* Flowing energy for lit nodes */}
                     {isLit && !isComingSoon && (
-                      <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent -translate-x-full animate-pulse"></div>
+                      <div className="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none">
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent animate-pulse"></div>
                       </div>
                     )}
                   </div>

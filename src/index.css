@@ -2,64 +2,64 @@
 @tailwind components;
 @tailwind utilities;
 
-/* KokoroLab Design System - Anime-inspired dark theme
+/* Modern Design System - Inspired by Instagram/Meta/Pinterest 
 All colors MUST be HSL.
 */
 
 @layer base {
   :root {
-    /* KokoroLab color scheme - matching reference image */
-    --background: 210 30% 6%;
-    --foreground: 210 15% 92%;
+    /* Modern neutral color scheme */
+    --background: 0 0% 2%;
+    --foreground: 0 0% 98%;
 
-    --card: 210 25% 12%;
-    --card-foreground: 210 15% 92%;
+    --card: 0 0% 6%;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 210 25% 14%;
-    --popover-foreground: 210 15% 92%;
+    --popover: 0 0% 8%;
+    --popover-foreground: 0 0% 98%;
 
-    /* Bluish-green primary (cyan accent from reference) */
-    --primary: 174 100% 42%;
-    --primary-foreground: 210 30% 8%;
-    --primary-glow: 174 100% 52%;
+    /* Warm accent colors */
+    --primary: 45 93% 58%;
+    --primary-foreground: 0 0% 2%;
+    --primary-glow: 45 100% 65%;
 
-    /* Dark secondary */
-    --secondary: 210 20% 18%;
-    --secondary-foreground: 210 15% 88%;
+    /* Subtle secondary */
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 88%;
 
-    /* Muted darker tones */
-    --muted: 210 15% 22%;
-    --muted-foreground: 210 10% 65%;
+    /* Muted warm tones */
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 60%;
 
-    /* Accent matching primary theme */
-    --accent: 174 80% 45%;
-    --accent-foreground: 210 30% 8%;
-    --accent-glow: 174 80% 55%;
+    /* Pink/coral accent */
+    --accent: 315 85% 65%;
+    --accent-foreground: 0 0% 2%;
+    --accent-glow: 315 100% 75%;
 
     --destructive: 0 75% 60%;
-    --destructive-foreground: 210 15% 92%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 210 20% 25%;
-    --input: 210 25% 16%;
-    --ring: 174 100% 42%;
+    --border: 0 0% 18%;
+    --input: 0 0% 10%;
+    --ring: 45 93% 58%;
 
-    /* KokoroLab gradients */
+    /* Modern gradients */
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
-    --gradient-hero: linear-gradient(135deg, hsl(var(--primary) / 0.8), hsl(var(--accent) / 0.6));
-    --gradient-card: linear-gradient(145deg, hsl(var(--card)), hsl(210 30% 14%));
-    --gradient-glow: radial-gradient(circle at center, hsl(var(--primary) / 0.4), transparent 70%);
+    --gradient-hero: linear-gradient(135deg, hsl(0 0% 4%), hsl(0 0% 1%));
+    --gradient-card: linear-gradient(145deg, hsl(var(--card)), hsl(0 0% 8%));
+    --gradient-warm: linear-gradient(45deg, hsl(var(--primary) / 0.1), hsl(var(--accent) / 0.1));
 
-    /* Shadows with cyan glow effects */
-    --shadow-primary: 0 10px 30px -10px hsl(var(--primary) / 0.5);
-    --shadow-accent: 0 10px 30px -10px hsl(var(--accent) / 0.5);
-    --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.4);
-    --shadow-card: 0 8px 32px -8px hsl(210 50% 3% / 0.9);
+    /* Subtle shadows */
+    --shadow-primary: 0 20px 60px -10px hsl(var(--primary) / 0.3);
+    --shadow-accent: 0 20px 60px -10px hsl(var(--accent) / 0.3);
+    --shadow-soft: 0 10px 40px -15px hsl(0 0% 0% / 0.8);
+    --shadow-card: 0 25px 80px -20px hsl(0 0% 0% / 0.9);
 
-    /* Animation curves */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    /* Smooth transitions */
+    --transition-smooth: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --transition-spring: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
-    --radius: 0.75rem;
+    --radius: 1rem;
   }
 }
 
@@ -74,37 +74,37 @@ All colors MUST be HSL.
 }
 
 @layer components {
-  /* Hero button variants */
-  .btn-hero {
-    @apply relative overflow-hidden rounded-2xl border border-border bg-card/50 backdrop-blur-sm px-8 py-4 font-semibold transition-all duration-300 hover:scale-105 hover:shadow-[var(--shadow-primary)];
+  /* Modern button variants */
+  .btn-modern {
+    @apply relative overflow-hidden rounded-full px-8 py-3 font-medium transition-all duration-500 hover:scale-105;
   }
   
-  .btn-hero-primary {
-    @apply btn-hero bg-gradient-to-r from-primary to-accent text-primary-foreground hover:from-primary-glow hover:to-accent-glow;
+  .btn-primary {
+    @apply btn-modern bg-gradient-to-r from-primary to-accent text-primary-foreground hover:shadow-[var(--shadow-primary)];
   }
   
-  .btn-hero-outline {
-    @apply btn-hero border-primary/50 text-primary hover:bg-primary/10;
+  .btn-outline {
+    @apply btn-modern border border-border/30 text-foreground hover:bg-primary/5 hover:border-primary/50;
   }
 
-  /* Card variants */
-  .card-anime {
-    @apply rounded-2xl bg-[var(--gradient-card)] p-6 shadow-[var(--shadow-card)] border border-border/50 backdrop-blur-sm;
+  /* Modern card variants */
+  .card-modern {
+    @apply rounded-3xl bg-[var(--gradient-card)] p-8 shadow-[var(--shadow-soft)] border border-border/20 backdrop-blur-md;
   }
 
-  /* Glow effects */
-  .glow-primary {
-    @apply relative before:absolute before:inset-0 before:rounded-3xl before:bg-[var(--gradient-glow)] before:blur-xl before:-z-10;
+  /* Tree branch effects */
+  .tree-branch {
+    @apply relative before:absolute before:inset-0 before:rounded-full before:bg-gradient-to-r before:from-primary/20 before:to-accent/20 before:blur-sm before:opacity-0 before:transition-opacity before:duration-500 hover:before:opacity-100;
   }
 
-  /* Animated backgrounds */
-  .bg-hero {
-    @apply relative bg-background overflow-hidden;
+  /* Modern backgrounds */
+  .bg-modern {
+    @apply relative bg-[var(--gradient-hero)] overflow-hidden;
   }
   
-  .bg-hero::before {
+  .bg-modern::before {
     content: '';
-    @apply absolute inset-0 bg-[var(--gradient-hero)] opacity-20;
+    @apply absolute inset-0 bg-[var(--gradient-warm)] opacity-50;
   }
 }
 
@@ -115,7 +115,7 @@ All colors MUST be HSL.
   }
   
   .animate-glow {
-    animation: glow 2s ease-in-out infinite alternate;
+    animation: glow 3s ease-in-out infinite alternate;
   }
   
   .animate-fade-in-up {
@@ -123,7 +123,15 @@ All colors MUST be HSL.
   }
   
   .animate-breathe {
-    animation: breathe 4s ease-in-out infinite;
+    animation: breathe 8s ease-in-out infinite;
+  }
+  
+  .animate-branch-grow {
+    animation: branch-grow 1s ease-out forwards;
+  }
+  
+  .animate-organic-pulse {
+    animation: organic-pulse 4s ease-in-out infinite;
   }
 }
 
@@ -139,7 +147,7 @@ All colors MUST be HSL.
 
 @keyframes glow {
   from { box-shadow: var(--shadow-primary); }
-  to { box-shadow: var(--shadow-glow); }
+  to { box-shadow: var(--shadow-soft); }
 }
 
 @keyframes fadeInUp {
@@ -150,5 +158,35 @@ All colors MUST be HSL.
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes branch-grow {
+  from {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleX(1);  
+    opacity: 1;
+  }
+}
+
+@keyframes organic-pulse {
+  0%, 100% { 
+    transform: scale(1) rotate(0deg);
+    filter: blur(0px);
+  }
+  25% { 
+    transform: scale(1.05) rotate(1deg);
+    filter: blur(0.5px);
+  }
+  50% { 
+    transform: scale(1.02) rotate(-0.5deg);
+    filter: blur(0px);
+  }
+  75% { 
+    transform: scale(1.08) rotate(-1deg);
+    filter: blur(0.5px);
   }
 }

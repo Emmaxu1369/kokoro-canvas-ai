@@ -20,6 +20,7 @@ interface Message {
 
 const VariationPage = () => {
   const navigate = useNavigate();
+  const [currentLanguage, setCurrentLanguage] = useState<"en" | "jp">("en");
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
@@ -99,7 +100,7 @@ const VariationPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <Header currentLanguage={currentLanguage} onLanguageChange={setCurrentLanguage} />
       
       <div className="flex h-screen pt-16">
         {/* Fixed Sidebar */}
