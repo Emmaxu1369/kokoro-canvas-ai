@@ -2,64 +2,70 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Modern Design System - Inspired by Instagram/Meta/Pinterest 
+/* Modern Macaron Design System - Light theme with pastel colors
 All colors MUST be HSL.
 */
 
 @layer base {
   :root {
-    /* Modern neutral color scheme */
-    --background: 0 0% 2%;
-    --foreground: 0 0% 98%;
+    /* Clean light background */
+    --background: 0 0% 98%;
+    --foreground: 220 15% 20%;
 
-    --card: 0 0% 6%;
-    --card-foreground: 0 0% 98%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 15% 20%;
 
-    --popover: 0 0% 8%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 15% 20%;
 
-    /* Warm accent colors */
-    --primary: 45 93% 58%;
-    --primary-foreground: 0 0% 2%;
-    --primary-glow: 45 100% 65%;
+    /* Macaron pastel colors */
+    --primary: 200 100% 70%;        /* Sky blue */
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 200 100% 80%;
 
-    /* Subtle secondary */
-    --secondary: 0 0% 12%;
-    --secondary-foreground: 0 0% 88%;
+    /* Soft secondary */
+    --secondary: 240 12% 95%;
+    --secondary-foreground: 220 15% 25%;
 
-    /* Muted warm tones */
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 60%;
+    /* Muted soft tones */
+    --muted: 240 5% 92%;
+    --muted-foreground: 220 10% 45%;
 
-    /* Pink/coral accent */
-    --accent: 315 85% 65%;
-    --accent-foreground: 0 0% 2%;
-    --accent-glow: 315 100% 75%;
+    /* Pink macaron accent */
+    --accent: 340 80% 75%;           /* Soft pink */
+    --accent-foreground: 0 0% 100%;
+    --accent-glow: 340 90% 85%;
 
-    --destructive: 0 75% 60%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 70% 65%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 18%;
-    --input: 0 0% 10%;
-    --ring: 45 93% 58%;
+    --border: 240 6% 88%;
+    --input: 240 6% 96%;
+    --ring: 200 100% 70%;
 
-    /* Modern gradients */
+    /* Additional macaron colors for tree branches */
+    --branch-lavender: 260 60% 80%;
+    --branch-mint: 160 50% 75%;
+    --branch-peach: 25 80% 80%;
+    --branch-lemon: 55 70% 85%;
+
+    /* Soft gradients */
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
-    --gradient-hero: linear-gradient(135deg, hsl(0 0% 4%), hsl(0 0% 1%));
-    --gradient-card: linear-gradient(145deg, hsl(var(--card)), hsl(0 0% 8%));
-    --gradient-warm: linear-gradient(45deg, hsl(var(--primary) / 0.1), hsl(var(--accent) / 0.1));
+    --gradient-hero: linear-gradient(135deg, hsl(0 0% 100%), hsl(240 12% 98%));
+    --gradient-card: linear-gradient(135deg, hsl(var(--card)), hsl(240 12% 99%));
+    --gradient-warm: linear-gradient(45deg, hsl(var(--primary) / 0.05), hsl(var(--accent) / 0.05));
 
-    /* Subtle shadows */
-    --shadow-primary: 0 20px 60px -10px hsl(var(--primary) / 0.3);
-    --shadow-accent: 0 20px 60px -10px hsl(var(--accent) / 0.3);
-    --shadow-soft: 0 10px 40px -15px hsl(0 0% 0% / 0.8);
-    --shadow-card: 0 25px 80px -20px hsl(0 0% 0% / 0.9);
+    /* Gentle shadows */
+    --shadow-primary: 0 4px 24px -6px hsl(var(--primary) / 0.25);
+    --shadow-accent: 0 4px 24px -6px hsl(var(--accent) / 0.25);
+    --shadow-soft: 0 2px 20px -8px hsl(220 15% 20% / 0.15);
+    --shadow-card: 0 8px 40px -12px hsl(220 15% 20% / 0.1);
 
     /* Smooth transitions */
     --transition-smooth: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     --transition-spring: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
-    --radius: 1rem;
+    --radius: 1.2rem;
   }
 }
 
@@ -74,37 +80,36 @@ All colors MUST be HSL.
 }
 
 @layer components {
-  /* Modern button variants */
-  .btn-modern {
+  /* Macaron button variants */
+  .btn-macaron {
     @apply relative overflow-hidden rounded-full px-8 py-3 font-medium transition-all duration-500 hover:scale-105;
   }
   
   .btn-primary {
-    @apply btn-modern bg-gradient-to-r from-primary to-accent text-primary-foreground hover:shadow-[var(--shadow-primary)];
+    @apply btn-macaron bg-gradient-to-r from-primary to-accent text-white hover:shadow-[var(--shadow-primary)];
   }
   
   .btn-outline {
-    @apply btn-modern border border-border/30 text-foreground hover:bg-primary/5 hover:border-primary/50;
+    @apply btn-macaron border-2 border-primary/30 text-primary hover:bg-primary/5 hover:border-primary/50;
   }
 
-  /* Modern card variants */
-  .card-modern {
-    @apply rounded-3xl bg-[var(--gradient-card)] p-8 shadow-[var(--shadow-soft)] border border-border/20 backdrop-blur-md;
+  /* Clean card variants */
+  .card-clean {
+    @apply rounded-3xl bg-card p-8 shadow-[var(--shadow-soft)] border border-border/50;
   }
 
   /* Tree branch effects */
   .tree-branch {
-    @apply relative before:absolute before:inset-0 before:rounded-full before:bg-gradient-to-r before:from-primary/20 before:to-accent/20 before:blur-sm before:opacity-0 before:transition-opacity before:duration-500 hover:before:opacity-100;
-  }
-
-  /* Modern backgrounds */
-  .bg-modern {
-    @apply relative bg-[var(--gradient-hero)] overflow-hidden;
+    @apply relative transition-all duration-700;
   }
   
-  .bg-modern::before {
-    content: '';
-    @apply absolute inset-0 bg-[var(--gradient-warm)] opacity-50;
+  .tree-node {
+    @apply relative transition-all duration-500 hover:scale-105;
+  }
+
+  /* Clean backgrounds */
+  .bg-clean {
+    @apply bg-[var(--gradient-hero)] relative overflow-hidden;
   }
 }
 

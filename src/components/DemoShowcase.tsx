@@ -67,26 +67,26 @@ const DemoShowcase = ({ activeDemo, language }: DemoShowcaseProps) => {
   return (
     <div className="flex-1 max-w-3xl">
       <div className={cn(
-        "relative bg-gradient-to-br from-card/50 to-card/30 backdrop-blur-2xl rounded-[2rem] p-10 border border-border/20 transition-all duration-700 animate-breathe",
-        "hover:shadow-[var(--shadow-card)] hover:border-primary/30"
+        "relative bg-card/80 backdrop-blur-sm rounded-[2rem] p-10 border-2 border-border/30 transition-all duration-700 animate-breathe",
+        "hover:shadow-[var(--shadow-card)] hover:border-primary/20"
       )}>
-        {/* Subtle gradient border */}
-        <div className="absolute -inset-px bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10 rounded-[2rem] blur-md opacity-60"></div>
+        {/* Clean gradient border */}
+        <div className="absolute -inset-px bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20 rounded-[2rem] opacity-30"></div>
         
         <div className="relative">
           {/* Demo Image */}
           <div className="relative mb-10 group">
-            <div className="relative overflow-hidden rounded-3xl">
+            <div className="relative overflow-hidden rounded-3xl border border-border/20">
               <img 
                 src={currentDemo.image}
                 alt={currentDemo.title[language]}
                 className="w-full h-96 object-cover transition-all duration-700 group-hover:scale-110"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/30 via-transparent to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-background/20 via-transparent to-transparent"></div>
             </div>
             
-            {/* Modern floating badge */}
-            <div className="absolute top-6 right-6 px-4 py-2 bg-gradient-to-r from-primary to-accent backdrop-blur-md text-primary-foreground rounded-full text-sm font-semibold shadow-lg">
+            {/* Clean floating badge */}
+            <div className="absolute top-6 right-6 px-4 py-2 bg-white/90 backdrop-blur-md text-primary rounded-full text-sm font-semibold shadow-lg border border-primary/20">
               AI Generated
             </div>
           </div>
@@ -102,13 +102,13 @@ const DemoShowcase = ({ activeDemo, language }: DemoShowcaseProps) => {
               </p>
             </div>
 
-            {/* Modern CTA Buttons */}
+            {/* Clean CTA Buttons */}
             <div className="flex justify-center gap-6">
               {isComingSoon ? (
                 <Button 
                   disabled
                   size="lg"
-                  className="px-10 py-6 text-lg rounded-full bg-muted text-muted-foreground cursor-not-allowed"
+                  className="px-10 py-6 text-lg rounded-full bg-muted/50 text-muted-foreground cursor-not-allowed border-2 border-muted/30"
                 >
                   {currentDemo.buttonText[language]}
                 </Button>
@@ -121,7 +121,7 @@ const DemoShowcase = ({ activeDemo, language }: DemoShowcaseProps) => {
                     variant="outline"
                     className={cn(
                       "px-10 py-6 text-lg rounded-full transition-all duration-500 font-semibold",
-                      "border-2 border-primary/40 text-primary hover:bg-primary/10 hover:scale-105 hover:shadow-[var(--shadow-primary)]"
+                      "border-2 border-primary/50 text-primary hover:bg-primary/10 hover:scale-105 hover:shadow-[var(--shadow-primary)]"
                     )}
                   >
                     <Link to={currentDemo.route}>
@@ -133,7 +133,7 @@ const DemoShowcase = ({ activeDemo, language }: DemoShowcaseProps) => {
                     size="lg"
                     className={cn(
                       "px-10 py-6 text-lg rounded-full transition-all duration-500 font-semibold",
-                      "bg-gradient-to-r from-accent to-primary text-primary-foreground",
+                      "bg-gradient-to-r from-accent to-primary text-white",
                       "hover:from-accent-glow hover:to-primary-glow hover:scale-105 hover:shadow-[var(--shadow-primary)]",
                       "active:scale-95"
                     )}
@@ -148,7 +148,7 @@ const DemoShowcase = ({ activeDemo, language }: DemoShowcaseProps) => {
                   size="lg"
                   className={cn(
                     "px-12 py-6 text-xl rounded-full transition-all duration-500 font-semibold",
-                    "bg-gradient-to-r from-primary to-accent text-primary-foreground",
+                    "bg-gradient-to-r from-primary to-accent text-white",
                     "hover:from-primary-glow hover:to-accent-glow hover:scale-110 hover:shadow-[var(--shadow-primary)]",
                     "active:scale-95"
                   )}
