@@ -1,7 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import variationDemo from "@/assets/demo-variation.jpg";
+import smartEditDemo from "@/assets/demo-smart-edit.jpg";
+import storyFlowDemo from "@/assets/demo-story-flow.jpg";
 
 interface DemoShowcaseProps {
   activeDemo: string;
@@ -16,9 +19,10 @@ const DemoShowcase = ({ activeDemo, language }: DemoShowcaseProps) => {
         en: "Sprite Variations let you generate multiple outfits, expressions, and fine details from a single illustration while preserving consistency.",
         jp: "スプライト差分機能により、一枚のイラストから服装や表情などを変えた複数のバリエーションを生成し、一貫した画風を保ちます。"
       },
-      image: "/placeholder.svg?height=600&width=800",
+      image: variationDemo,
       route: "/variation",
-      buttonText: { en: "Try it!", jp: "試してみる！" }
+      buttonText: { en: "Try it!", jp: "試してみる！" },
+      hasMultipleButtons: false
     },
     "smart-edit": {
       title: { en: "Smart Edit", jp: "スマート編集" },
@@ -26,9 +30,10 @@ const DemoShowcase = ({ activeDemo, language }: DemoShowcaseProps) => {
         en: "Smart Edit allows creators to modify images with natural language. From poses to backgrounds, every change stays true to the original style.",
         jp: "スマート編集は自然言語でイラストを修正可能。表情や背景変更も簡単に行え、画風は一貫して維持されます。"
       },
-      image: "/placeholder.svg?height=600&width=800",
+      image: smartEditDemo,
       route: "/variation", 
-      buttonText: { en: "Try it!", jp: "試してみる！" }
+      buttonText: { en: "Try it!", jp: "試してみる！" },
+      hasMultipleButtons: false
     },
     "story-flow": {
       title: { en: "Story Flow", jp: "ストーリーフロー" },
@@ -36,24 +41,26 @@ const DemoShowcase = ({ activeDemo, language }: DemoShowcaseProps) => {
         en: "Story Flow expands your creation into 50–100 connected illustrations, keeping characters and style consistent throughout the narrative.",
         jp: "ストーリーフロー機能で創作を連続展開。キャラクターや画風を維持しながら、50〜100枚の一貫したストーリーイラストに拡張できます。"
       },
-      image: "/placeholder.svg?height=600&width=800",
+      image: storyFlowDemo,
       route: "/image-set",
-      buttonText: { en: "Try it!", jp: "試してみる！" }
+      buttonText: { en: "Try it!", jp: "試してみる！" },
+      hasMultipleButtons: true
     },
-    "fast-start": {
-      title: { en: "Fast Start", jp: "ファストスタート" },
+    "coming-soon": {
+      title: { en: "Advanced Features", jp: "高度な機能" },
       description: { 
-        en: "Fast Start generates results instantly with optimized presets. Perfect for quick ideas and rapid prototyping.",
-        jp: "ファストスタートは最適化プリセットで即時生成。アイデアスケッチや高速プロトタイピングに最適です。"
+        en: "More powerful AI features are coming soon. Stay tuned for advanced editing capabilities and enhanced creative workflows.",
+        jp: "より強力なAI機能が近日公開予定。高度な編集機能と強化されたクリエイティブワークフローをお楽しみに。"
       },
       image: "/placeholder.svg?height=600&width=800", 
-      route: "/fast",
-      buttonText: { en: "Coming Soon", jp: "準備中" }
+      route: "#",
+      buttonText: { en: "Coming Soon", jp: "準備中" },
+      hasMultipleButtons: false
     }
   };
 
   const currentDemo = demoContent[activeDemo as keyof typeof demoContent];
-  const isComingSoon = activeDemo === "fast-start";
+  const isComingSoon = activeDemo === "coming-soon";
 
   if (!currentDemo) return null;
 
@@ -95,8 +102,8 @@ const DemoShowcase = ({ activeDemo, language }: DemoShowcaseProps) => {
               </p>
             </div>
 
-            {/* CTA Button */}
-            <div className="flex justify-center">
+            {/* CTA Buttons */}
+            <div className="flex justify-center gap-4">
               {isComingSoon ? (
                 <Button 
                   disabled
@@ -105,6 +112,36 @@ const DemoShowcase = ({ activeDemo, language }: DemoShowcaseProps) => {
                 >
                   {currentDemo.buttonText[language]}
                 </Button>
+              ) : currentDemo.hasMultipleButtons ? (
+                // Story Flow with dual buttons
+                <>
+                  <Button 
+                    asChild
+                    size="lg"
+                    variant="outline"
+                    className={cn(
+                      "px-8 py-6 text-lg rounded-2xl transition-all duration-300",
+                      "border-primary/50 text-primary hover:bg-primary/10 hover:scale-105"
+                    )}
+                  >
+                    <Link to={currentDemo.route}>
+                      {currentDemo.buttonText[language]}
+                      <ArrowRight className="w-5 h-5 ml-2" />
+                    </Link>
+                  </Button>
+                  <Button 
+                    size="lg"
+                    className={cn(
+                      "px-8 py-6 text-lg rounded-2xl transition-all duration-300",
+                      "bg-gradient-to-r from-accent to-primary text-primary-foreground",
+                      "hover:from-accent-glow hover:to-primary-glow hover:scale-105 hover:shadow-lg",
+                      "active:scale-95"
+                    )}
+                  >
+                    <Zap className="w-5 h-5 mr-2" />
+                    {language === "en" ? "Fast Start" : "ファストスタート"}
+                  </Button>
+                </>
               ) : (
                 <Button 
                   asChild
