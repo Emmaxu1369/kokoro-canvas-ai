@@ -71,6 +71,10 @@ const Index = () => {
               activeDemo={activeDemo}
               onDemoChange={setActiveDemo}
               language={currentLanguage}
+              onHover={(demo) => {
+                // Synchronize breathing animation with demo showcase
+                if (demo) setActiveDemo(demo);
+              }}
             />
             
             {/* Right - Demo Showcase */}

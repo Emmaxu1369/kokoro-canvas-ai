@@ -4,26 +4,13 @@ const Footer = () => {
   return (
     <footer className="bg-background border-t border-border/50 py-16">
       <div className="container mx-auto px-6">
-        <div className="grid md:grid-cols-4 gap-8 mb-12">
-          {/* Brand */}
-          <div className="space-y-4">
-            <div className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              KokoroLab
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Creation from the Heart
-            </p>
-          </div>
-
+        <div className="grid md:grid-cols-3 gap-8 mb-12">
           {/* Services */}
           <div className="space-y-4">
             <h4 className="font-semibold text-foreground">Services</h4>
             <div className="space-y-2">
-              <a href="#help" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
-                Help Center
-              </a>
-              <a href="#faq" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
-                FAQ
+              <a href="#tutorials" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
+                Tutorials
               </a>
               <a href="#contact" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
                 Contact Us
@@ -44,20 +31,14 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Community */}
+          {/* Brand */}
           <div className="space-y-4">
-            <h4 className="font-semibold text-foreground">Community</h4>
-            <div className="space-y-2">
-              <a href="#discord" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
-                Discord
-              </a>
-              <a href="#twitter" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
-                Twitter
-              </a>
-              <a href="#github" className="block text-sm text-muted-foreground hover:text-primary transition-colors">
-                GitHub
-              </a>
+            <div className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              KokoroLab
             </div>
+            <p className="text-sm text-muted-foreground">
+              All rights reserved.
+            </p>
           </div>
         </div>
 

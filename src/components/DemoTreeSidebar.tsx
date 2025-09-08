@@ -5,9 +5,10 @@ interface DemoTreeSidebarProps {
   activeDemo: string;
   onDemoChange: (demo: string) => void;
   language: "en" | "jp";
+  onHover?: (demo: string | null) => void;
 }
 
-const DemoTreeSidebar = ({ activeDemo, onDemoChange, language }: DemoTreeSidebarProps) => {
+const DemoTreeSidebar = ({ activeDemo, onDemoChange, language, onHover }: DemoTreeSidebarProps) => {
   const features = [
     {
       id: "variation",
@@ -47,17 +48,22 @@ const DemoTreeSidebar = ({ activeDemo, onDemoChange, language }: DemoTreeSidebar
   return (
     <div className="w-80 bg-card/20 backdrop-blur-xl rounded-3xl border border-border/30 p-8">
       <div className="space-y-6">
-        <div className="text-center">
-          <h3 className="text-lg font-semibold text-foreground mb-2">
-            {language === "en" ? "AI Creation Pipeline" : "AI創作パイプライン"}
+        {/* Root Base */}
+        <div className="text-center mb-8">
+          <div className="relative inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-full mb-4 shadow-lg">
+            <Sparkles className="w-8 h-8 text-white" />
+            <div className="absolute inset-0 rounded-full bg-primary/20 animate-pulse blur-sm"></div>
+          </div>
+          <h3 className="text-lg font-bold text-foreground mb-2">
+            KokoroLab Feature
           </h3>
-          <div className="w-16 h-1 bg-gradient-to-r from-primary to-accent rounded-full mx-auto"></div>
+          <div className="w-20 h-1 bg-gradient-to-r from-primary to-accent rounded-full mx-auto"></div>
         </div>
 
         {/* Tree Structure */}
         <div className="relative pl-6">
-          {/* Main trunk */}
-          <div className="absolute left-6 top-8 bottom-8 w-0.5 bg-gradient-to-b from-primary/60 via-primary/40 to-border/30"></div>
+          {/* Main trunk growing from root */}
+          <div className="absolute left-6 -top-8 bottom-8 w-1 bg-gradient-to-b from-primary via-primary/60 to-border/30 rounded-full"></div>
           
           <div className="space-y-6">
             {features.map((feature, index) => {
@@ -107,23 +113,35 @@ const DemoTreeSidebar = ({ activeDemo, onDemoChange, language }: DemoTreeSidebar
                           : "bg-muted/10 border border-transparent hover:bg-muted/20",
                       isComingSoon && "opacity-60 cursor-not-allowed"
                     )}
-                    onMouseEnter={() => !isComingSoon && onDemoChange(feature.id)}
+                    onMouseEnter={() => {
+                      if (!isComingSoon) {
+                        onDemoChange(feature.id);
+                        onHover?.(feature.id);
+                      }
+                    }}
+                    onMouseLeave={() => onHover?.(null)}
                   >
-                    {/* Node Circle with glow effect */}
+                    {/* Node Circle with breathing effect */}
                     <div className={cn(
                       "relative flex items-center justify-center w-12 h-12 rounded-full transition-all duration-500",
                       isActive 
-                        ? "bg-primary text-primary-foreground shadow-lg" 
+                        ? "bg-primary text-primary-foreground shadow-lg animate-pulse" 
                         : isLit
                           ? "bg-primary/20 text-primary border-2 border-primary/30"
                           : "bg-muted/50 text-muted-foreground",
                       isComingSoon && "bg-muted/30"
                     )}>
-                      <Icon className="w-5 h-5" />
+                      <Icon className={cn(
+                        "w-5 h-5 transition-transform duration-500",
+                        isActive && "animate-pulse"
+                      )} />
                       
-                      {/* Glow effect for active/lit nodes */}
+                      {/* Breathing glow effect for active/lit nodes */}
                       {(isActive || isLit) && !isComingSoon && (
-                        <div className="absolute inset-0 rounded-full bg-primary/20 animate-pulse blur-sm -z-10"></div>
+                        <>
+                          <div className="absolute inset-0 rounded-full bg-primary/20 animate-pulse blur-sm -z-10"></div>
+                          <div className="absolute inset-0 rounded-full bg-primary/10 animate-ping -z-20"></div>
+                        </>
                       )}
                     </div>
 
