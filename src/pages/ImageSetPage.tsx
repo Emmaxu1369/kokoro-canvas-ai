@@ -51,7 +51,6 @@ const mockCuts: Cut[] = [
 
 const ImageSetPage = () => {
   const navigate = useNavigate();
-  const [currentLanguage, setCurrentLanguage] = useState<"en" | "jp">("en");
   const [cuts, setCuts] = useState<Cut[]>(mockCuts);
   const [allGenerated, setAllGenerated] = useState(false);
   const [selectedFrames, setSelectedFrames] = useState<string[]>([]);
@@ -192,7 +191,7 @@ const ImageSetPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header currentLanguage={currentLanguage} onLanguageChange={setCurrentLanguage} />
+      <Header />
       
       <div className="flex h-screen pt-16">
         {/* Fixed Sidebar */}

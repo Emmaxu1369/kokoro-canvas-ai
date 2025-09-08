@@ -2,70 +2,64 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Modern Macaron Design System - Light theme with pastel colors
+/* KokoroLab Design System - Anime-inspired dark theme
 All colors MUST be HSL.
 */
 
 @layer base {
   :root {
-    /* Clean light background */
-    --background: 0 0% 98%;
-    --foreground: 220 15% 20%;
+    /* KokoroLab color scheme - matching reference image */
+    --background: 210 30% 6%;
+    --foreground: 210 15% 92%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 220 15% 20%;
+    --card: 210 25% 12%;
+    --card-foreground: 210 15% 92%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 220 15% 20%;
+    --popover: 210 25% 14%;
+    --popover-foreground: 210 15% 92%;
 
-    /* Macaron pastel colors */
-    --primary: 200 100% 70%;        /* Sky blue */
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 200 100% 80%;
+    /* Bluish-green primary (cyan accent from reference) */
+    --primary: 174 100% 42%;
+    --primary-foreground: 210 30% 8%;
+    --primary-glow: 174 100% 52%;
 
-    /* Soft secondary */
-    --secondary: 240 12% 95%;
-    --secondary-foreground: 220 15% 25%;
+    /* Dark secondary */
+    --secondary: 210 20% 18%;
+    --secondary-foreground: 210 15% 88%;
 
-    /* Muted soft tones */
-    --muted: 240 5% 92%;
-    --muted-foreground: 220 10% 45%;
+    /* Muted darker tones */
+    --muted: 210 15% 22%;
+    --muted-foreground: 210 10% 65%;
 
-    /* Pink macaron accent */
-    --accent: 340 80% 75%;           /* Soft pink */
-    --accent-foreground: 0 0% 100%;
-    --accent-glow: 340 90% 85%;
+    /* Accent matching primary theme */
+    --accent: 174 80% 45%;
+    --accent-foreground: 210 30% 8%;
+    --accent-glow: 174 80% 55%;
 
-    --destructive: 0 70% 65%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive: 0 75% 60%;
+    --destructive-foreground: 210 15% 92%;
 
-    --border: 240 6% 88%;
-    --input: 240 6% 96%;
-    --ring: 200 100% 70%;
+    --border: 210 20% 25%;
+    --input: 210 25% 16%;
+    --ring: 174 100% 42%;
 
-    /* Additional macaron colors for tree branches */
-    --branch-lavender: 260 60% 80%;
-    --branch-mint: 160 50% 75%;
-    --branch-peach: 25 80% 80%;
-    --branch-lemon: 55 70% 85%;
-
-    /* Soft gradients */
+    /* KokoroLab gradients */
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
-    --gradient-hero: linear-gradient(135deg, hsl(0 0% 100%), hsl(240 12% 98%));
-    --gradient-card: linear-gradient(135deg, hsl(var(--card)), hsl(240 12% 99%));
-    --gradient-warm: linear-gradient(45deg, hsl(var(--primary) / 0.05), hsl(var(--accent) / 0.05));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary) / 0.8), hsl(var(--accent) / 0.6));
+    --gradient-card: linear-gradient(145deg, hsl(var(--card)), hsl(210 30% 14%));
+    --gradient-glow: radial-gradient(circle at center, hsl(var(--primary) / 0.4), transparent 70%);
 
-    /* Gentle shadows */
-    --shadow-primary: 0 4px 24px -6px hsl(var(--primary) / 0.25);
-    --shadow-accent: 0 4px 24px -6px hsl(var(--accent) / 0.25);
-    --shadow-soft: 0 2px 20px -8px hsl(220 15% 20% / 0.15);
-    --shadow-card: 0 8px 40px -12px hsl(220 15% 20% / 0.1);
+    /* Shadows with cyan glow effects */
+    --shadow-primary: 0 10px 30px -10px hsl(var(--primary) / 0.5);
+    --shadow-accent: 0 10px 30px -10px hsl(var(--accent) / 0.5);
+    --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.4);
+    --shadow-card: 0 8px 32px -8px hsl(210 50% 3% / 0.9);
 
-    /* Smooth transitions */
-    --transition-smooth: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    --transition-spring: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Animation curves */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
-    --radius: 1.2rem;
+    --radius: 0.75rem;
   }
 }
 
@@ -80,36 +74,37 @@ All colors MUST be HSL.
 }
 
 @layer components {
-  /* Macaron button variants */
-  .btn-macaron {
-    @apply relative overflow-hidden rounded-full px-8 py-3 font-medium transition-all duration-500 hover:scale-105;
+  /* Hero button variants */
+  .btn-hero {
+    @apply relative overflow-hidden rounded-2xl border border-border bg-card/50 backdrop-blur-sm px-8 py-4 font-semibold transition-all duration-300 hover:scale-105 hover:shadow-[var(--shadow-primary)];
   }
   
-  .btn-primary {
-    @apply btn-macaron bg-gradient-to-r from-primary to-accent text-white hover:shadow-[var(--shadow-primary)];
+  .btn-hero-primary {
+    @apply btn-hero bg-gradient-to-r from-primary to-accent text-primary-foreground hover:from-primary-glow hover:to-accent-glow;
   }
   
-  .btn-outline {
-    @apply btn-macaron border-2 border-primary/30 text-primary hover:bg-primary/5 hover:border-primary/50;
+  .btn-hero-outline {
+    @apply btn-hero border-primary/50 text-primary hover:bg-primary/10;
   }
 
-  /* Clean card variants */
-  .card-clean {
-    @apply rounded-3xl bg-card p-8 shadow-[var(--shadow-soft)] border border-border/50;
+  /* Card variants */
+  .card-anime {
+    @apply rounded-2xl bg-[var(--gradient-card)] p-6 shadow-[var(--shadow-card)] border border-border/50 backdrop-blur-sm;
   }
 
-  /* Tree branch effects */
-  .tree-branch {
-    @apply relative transition-all duration-700;
+  /* Glow effects */
+  .glow-primary {
+    @apply relative before:absolute before:inset-0 before:rounded-3xl before:bg-[var(--gradient-glow)] before:blur-xl before:-z-10;
+  }
+
+  /* Animated backgrounds */
+  .bg-hero {
+    @apply relative bg-background overflow-hidden;
   }
   
-  .tree-node {
-    @apply relative transition-all duration-500 hover:scale-105;
-  }
-
-  /* Clean backgrounds */
-  .bg-clean {
-    @apply bg-[var(--gradient-hero)] relative overflow-hidden;
+  .bg-hero::before {
+    content: '';
+    @apply absolute inset-0 bg-[var(--gradient-hero)] opacity-20;
   }
 }
 
@@ -120,7 +115,7 @@ All colors MUST be HSL.
   }
   
   .animate-glow {
-    animation: glow 3s ease-in-out infinite alternate;
+    animation: glow 2s ease-in-out infinite alternate;
   }
   
   .animate-fade-in-up {
@@ -128,15 +123,7 @@ All colors MUST be HSL.
   }
   
   .animate-breathe {
-    animation: breathe 8s ease-in-out infinite;
-  }
-  
-  .animate-branch-grow {
-    animation: branch-grow 1s ease-out forwards;
-  }
-  
-  .animate-organic-pulse {
-    animation: organic-pulse 4s ease-in-out infinite;
+    animation: breathe 4s ease-in-out infinite;
   }
 }
 
@@ -152,7 +139,7 @@ All colors MUST be HSL.
 
 @keyframes glow {
   from { box-shadow: var(--shadow-primary); }
-  to { box-shadow: var(--shadow-soft); }
+  to { box-shadow: var(--shadow-glow); }
 }
 
 @keyframes fadeInUp {
@@ -163,35 +150,5 @@ All colors MUST be HSL.
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-@keyframes branch-grow {
-  from {
-    transform: scaleX(0);
-    opacity: 0;
-  }
-  to {
-    transform: scaleX(1);  
-    opacity: 1;
-  }
-}
-
-@keyframes organic-pulse {
-  0%, 100% { 
-    transform: scale(1) rotate(0deg);
-    filter: blur(0px);
-  }
-  25% { 
-    transform: scale(1.05) rotate(1deg);
-    filter: blur(0.5px);
-  }
-  50% { 
-    transform: scale(1.02) rotate(-0.5deg);
-    filter: blur(0px);
-  }
-  75% { 
-    transform: scale(1.08) rotate(-1deg);
-    filter: blur(0.5px);
   }
 }
