@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Upload, Clipboard, ChevronDown, ChevronRight, Clock, Settings } from "lucide-react";
+import { Upload, Clipboard, ChevronDown, ChevronRight, Clock, Settings, Wand2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ImageSetSidebarProps {
@@ -15,6 +15,8 @@ interface ImageSetSidebarProps {
 
 const ImageSetSidebar = ({ className, onImageUpload, imageTags = [] }: ImageSetSidebarProps) => {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [referenceImage, setReferenceImage] = useState<string | null>(null);
+  const [referenceTags, setReferenceTags] = useState<string[]>([]);
   const [settings, setSettings] = useState({
     size: "1024x1024",
     cfgScale: [7.5],
@@ -35,8 +37,39 @@ const ImageSetSidebar = ({ className, onImageUpload, imageTags = [] }: ImageSetS
     }
   };
 
-  const handleGenerateImageTags = () => {
-    console.log("Generate tags from uploaded image");
+  const handleReferenceImageUpload = (file: File) => {
+    if (file.type.startsWith('image/')) {
+      const url = URL.createObjectURL(file);
+      setReferenceImage(url);
+      // 模拟生成tag
+      const mockTags = ["reference", "style", "composition", "lighting"];
+      setReferenceTags(mockTags);
+    }
+  };
+
+  const handleReferenceFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      handleReferenceImageUpload(files[0]);
+    }
+  };
+
+  const handleReferencePaste = async () => {
+    try {
+      const clipboardItems = await navigator.clipboard.read();
+      for (const clipboardItem of clipboardItems) {
+        for (const type of clipboardItem.types) {
+          if (type.startsWith('image/')) {
+            const blob = await clipboardItem.getType(type);
+            const file = new File([blob], 'pasted-reference.png', { type });
+            handleReferenceImageUpload(file);
+            return;
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Failed to read clipboard contents: ', err);
+    }
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -130,38 +163,67 @@ const ImageSetSidebar = ({ className, onImageUpload, imageTags = [] }: ImageSetS
         </div>
 
         {/* Reference Image to Tags */}
-        {uploadedImage && (
-          <div className="space-y-3 p-4 bg-card/30 rounded-lg border border-border/50">
-            <div className="flex items-center justify-between">
-              <Label className="text-sm font-medium">Image to Tags</Label>
-              <Button 
-                size="sm" 
-                onClick={handleGenerateImageTags}
-                className="h-7 px-3 text-xs"
-              >
-                Generate Tags
-              </Button>
-            </div>
+        <div className="space-y-3">
+          <Label className="text-sm font-medium">Upload Image to Tags</Label>
+          <div className="border-2 border-dashed border-border/50 rounded-lg p-4 text-center hover:border-primary/50 transition-colors">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleReferenceFileSelect}
+              className="hidden"
+              id="reference-upload"
+            />
             
-            {imageTags.length > 0 && (
-              <div>
-                <p className="text-xs text-muted-foreground mb-2">Generated Tags:</p>
-                <div className="flex flex-wrap gap-1">
-                  {imageTags.map((tag, index) => (
-                    <span 
-                      key={index}
-                      draggable
-                      onDragStart={(e) => e.dataTransfer.setData('text/plain', tag)}
-                      className="px-2 py-1 bg-primary/20 text-primary text-xs rounded cursor-move hover:bg-primary/30 transition-colors select-none"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+            {referenceImage ? (
+              <div className="space-y-3">
+                <img
+                  src={referenceImage}
+                  alt="Reference"
+                  className="max-w-full max-h-32 mx-auto rounded-lg"
+                />
+                <p className="text-xs text-muted-foreground">Reference image uploaded</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <Upload className="h-8 w-8 text-muted-foreground mx-auto" />
+                <div className="space-y-2">
+                  <label
+                    htmlFor="reference-upload"
+                    className="inline-flex items-center gap-2 px-3 py-2 bg-primary text-primary-foreground text-sm rounded-lg cursor-pointer hover:bg-primary/90 transition-colors"
+                  >
+                    Upload
+                  </label>
+                  <button
+                    onClick={handleReferencePaste}
+                    className="inline-flex items-center gap-2 px-3 py-2 bg-secondary text-secondary-foreground text-sm rounded-lg hover:bg-secondary/80 transition-colors ml-2"
+                  >
+                    <Clipboard className="h-4 w-4" />
+                    Paste
+                  </button>
                 </div>
               </div>
             )}
           </div>
-        )}
+          
+          {/* Generated Tags */}
+          {referenceTags.length > 0 && (
+            <div className="p-3 bg-card/30 rounded-lg border border-border/50">
+              <p className="text-xs text-muted-foreground mb-2">Generated Tags:</p>
+              <div className="flex flex-wrap gap-1">
+                {referenceTags.map((tag, index) => (
+                  <span 
+                    key={index}
+                    draggable
+                    onDragStart={(e) => e.dataTransfer.setData('text/plain', tag)}
+                    className="px-2 py-1 bg-primary/20 text-primary text-xs rounded cursor-move hover:bg-primary/30 transition-colors select-none"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* Image Size */}
         <div className="space-y-2">
