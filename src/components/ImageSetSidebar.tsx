@@ -9,9 +9,10 @@ import { cn } from "@/lib/utils";
 
 interface ImageSetSidebarProps {
   className?: string;
+  onImageUpload?: (file: File) => void;
 }
 
-const ImageSetSidebar = ({ className }: ImageSetSidebarProps) => {
+const ImageSetSidebar = ({ className, onImageUpload }: ImageSetSidebarProps) => {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [settings, setSettings] = useState({
     size: "1024x1024",
@@ -29,6 +30,7 @@ const ImageSetSidebar = ({ className }: ImageSetSidebarProps) => {
     if (file.type.startsWith('image/')) {
       const url = URL.createObjectURL(file);
       setUploadedImage(url);
+      onImageUpload?.(file);
     }
   };
 

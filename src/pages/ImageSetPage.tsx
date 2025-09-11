@@ -5,6 +5,7 @@ import ImageSetSidebar from "@/components/ImageSetSidebar";
 import EnhancedCutCard from "@/components/EnhancedCutCard";
 import BatchOperationsToolbar from "@/components/BatchOperationsToolbar";
 import EditModal from "@/components/EditModal";
+import PromptCopilot from "@/components/PromptCopilot";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -56,6 +57,8 @@ const ImageSetPage = () => {
   const [selectedFrames, setSelectedFrames] = useState<string[]>([]);
   const [zoomLevel, setZoomLevel] = useState(17); // Default to show 6 images per row
   const [uploadedImage, setUploadedImage] = useState<string>();
+  const [imageTags, setImageTags] = useState<string[]>([]);
+  const [copilotTags, setCopilotTags] = useState<string[]>([]);
   
   // Edit modal state
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -111,6 +114,10 @@ const ImageSetPage = () => {
     const url = URL.createObjectURL(file);
     setUploadedImage(url);
     
+    // Generate mock tags from image
+    const mockImageTags = ["anime", "character", "school uniform", "portrait"];
+    setImageTags(mockImageTags);
+    
     // Auto-populate Cut1 Frame1 with uploaded image variant
     const updatedCuts = [...cuts];
     if (updatedCuts[0]?.frames[0]) {
@@ -118,10 +125,22 @@ const ImageSetPage = () => {
         ...updatedCuts[0].frames[0],
         isGenerated: true,
         imageUrl: url,
-        tags: ["uploaded image", "base variant"]
+        tags: mockImageTags
       };
     }
     setCuts(updatedCuts);
+  };
+
+  const handleCopilotImageUpload = (file: File) => {
+    // Generate mock tags from copilot image
+    const mockTags = ["character", "pose", "lighting", "background"];
+    setCopilotTags(mockTags);
+  };
+
+  const handlePromptToTags = (prompt: string) => {
+    // Generate mock tags from prompt
+    const mockTags = prompt.split(' ').slice(0, 4).map(word => word.toLowerCase());
+    setCopilotTags(mockTags);
   };
 
   const handleAddCut = () => {
@@ -195,7 +214,41 @@ const ImageSetPage = () => {
       
       <div className="flex h-screen pt-16">
         {/* Fixed Sidebar */}
-        <ImageSetSidebar />
+        <ImageSetSidebar onImageUpload={handleImageUpload} />
+        
+        {/* Prompt Copilot - positioned after sidebar */}
+        <div className="fixed left-80 top-20 w-80 z-10">
+          {uploadedImage && (
+            <>
+              <Card className="mb-4 bg-card/50 backdrop-blur-sm border-border/50">
+                <CardContent className="p-4">
+                  <div className="aspect-square bg-muted rounded-lg overflow-hidden mb-2">
+                    <img src={uploadedImage} alt="Uploaded reference" className="w-full h-full object-cover" />
+                  </div>
+                  <p className="text-xs text-muted-foreground mb-2">Generated Tags:</p>
+                  <div className="flex flex-wrap gap-1">
+                    {imageTags.map((tag, index) => (
+                      <span 
+                        key={index}
+                        draggable
+                        onDragStart={(e) => e.dataTransfer.setData('text/plain', tag)}
+                        className="px-2 py-1 bg-primary/20 text-primary text-xs rounded cursor-move hover:bg-primary/30 transition-colors"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <PromptCopilot
+                onImageUpload={handleCopilotImageUpload}
+                onPromptToTags={handlePromptToTags}
+                generatedTags={copilotTags}
+              />
+            </>
+          )}
+        </div>
         
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col ml-80 p-6">
