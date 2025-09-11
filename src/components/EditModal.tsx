@@ -59,90 +59,96 @@ const EditModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-[95vw] w-[95vw] h-[95vh] max-h-[95vh] bg-gradient-to-br from-background via-background to-muted/20 p-0">
-        <DialogHeader className="p-6 pb-0 flex-shrink-0">
-          <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+      <DialogContent className="max-w-[98vw] w-[98vw] h-[90vh] bg-gradient-to-br from-background via-background to-muted/20 p-0 overflow-hidden">
+        <DialogHeader className="p-4 pb-0 flex-shrink-0">
+          <DialogTitle className="text-xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
             Edit Image
           </DialogTitle>
         </DialogHeader>
         
-        <div className="flex-1 flex gap-6 px-6 pb-6 min-h-0">
-          {/* Left - History Sidebar */}
-          <div className="w-80 flex-shrink-0">
-            <HistoryRecords />
-          </div>
+        <ScrollArea className="flex-1 px-4 pb-4">
+          <div className="flex gap-4 min-h-[calc(90vh-80px)]">
+            {/* Left - History Sidebar */}
+            <div className="w-64 flex-shrink-0">
+              <HistoryRecords />
+            </div>
 
-          {/* Center - Image and Controls */}
-          <div className="flex-1 flex flex-col">
-            {/* Image with Action Buttons */}
-            <div className="flex-1 bg-card/30 backdrop-blur-sm rounded-xl border border-border/50 p-6 mb-4">
-              <div className="flex gap-6 h-full">
-                {/* Image */}
-                <div className="flex-1 bg-muted/30 rounded-xl flex items-center justify-center overflow-hidden">
-                  {currentImage ? (
-                    <img 
-                      src={currentImage} 
-                      alt="Current" 
-                      className="max-w-full max-h-full object-contain"
-                    />
-                  ) : (
-                    <div className="text-muted-foreground">No current image</div>
-                  )}
+            {/* Center - Image and Controls */}
+            <div className="flex-1 flex flex-col min-w-0">
+              {/* Image with Action Buttons */}
+              <div className="flex-1 bg-card/30 backdrop-blur-sm rounded-xl border border-border/50 p-4 mb-4 min-h-[300px]">
+                <div className="flex gap-4 h-full">
+                  {/* Image */}
+                  <div className="flex-1 bg-muted/30 rounded-xl flex items-center justify-center overflow-hidden min-h-[250px]">
+                    {currentImage ? (
+                      <img 
+                        src={currentImage} 
+                        alt="Current" 
+                        className="max-w-full max-h-full object-contain"
+                      />
+                    ) : (
+                      <div className="text-muted-foreground">No current image</div>
+                    )}
+                  </div>
+                  
+                  {/* Action buttons - Icons only */}
+                  <div className="flex flex-col gap-2 justify-center">
+                    <Button 
+                      onClick={() => console.log("Confirm")}
+                      className="h-10 w-10 p-0 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
+                      title="Confirm"
+                    >
+                      <Check className="h-4 w-4" />
+                    </Button>
+                    <Button 
+                      onClick={() => onDownload?.()}
+                      variant="outline"
+                      className="h-10 w-10 p-0 border-primary/30 hover:bg-primary/10"
+                      title="Download"
+                    >
+                      <Download className="h-4 w-4" />
+                    </Button>
+                    <Button 
+                      onClick={() => console.log("Share")}
+                      variant="outline"
+                      className="h-10 w-10 p-0"
+                      title="Share"
+                    >
+                      <Share2 className="h-4 w-4" />
+                    </Button>
+                    <Button 
+                      onClick={() => onRetry?.()}
+                      variant="outline"
+                      className="h-10 w-10 p-0"
+                      title="Retry"
+                    >
+                      <RotateCcw className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
-                
-                {/* Action buttons - Icons only */}
-                <div className="flex flex-col gap-3 justify-center">
-                  <Button 
-                    onClick={() => console.log("Confirm")}
-                    className="h-12 w-12 p-0 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
-                    title="Confirm"
-                  >
-                    <Check className="h-5 w-5" />
-                  </Button>
-                  <Button 
-                    onClick={() => onDownload?.()}
-                    variant="outline"
-                    className="h-12 w-12 p-0 border-primary/30 hover:bg-primary/10"
-                    title="Download"
-                  >
-                    <Download className="h-5 w-5" />
-                  </Button>
-                  <Button 
-                    onClick={() => console.log("Share")}
-                    variant="outline"
-                    className="h-12 w-12 p-0"
-                    title="Share"
-                  >
-                    <Share2 className="h-5 w-5" />
-                  </Button>
-                  <Button 
-                    onClick={() => onRetry?.()}
-                    variant="outline"
-                    className="h-12 w-12 p-0"
-                    title="Retry"
-                  >
-                    <RotateCcw className="h-5 w-5" />
-                  </Button>
-                </div>
+              </div>
+
+              {/* Prompt Copilot */}
+              <div className="h-48">
+                <PromptCopilot
+                  onImageUpload={handleCopilotImageUpload}
+                  onPromptToTags={handlePromptToTags}
+                  generatedTags={copilotTags}
+                  className="h-full"
+                />
               </div>
             </div>
 
-            {/* Prompt Copilot */}
-            <PromptCopilot
-              onImageUpload={handleCopilotImageUpload}
-              onPromptToTags={handlePromptToTags}
-              generatedTags={copilotTags}
-            />
+            {/* Right - Tags Area */}
+            <div className="w-64 flex-shrink-0">
+              <TagArea 
+                tags={editTags}
+                onTagsChange={setEditTags}
+                className="h-full"
+              />
+            </div>
           </div>
-
-          {/* Right - Tags Area */}
-          <div className="w-80 flex-shrink-0">
-            <TagArea 
-              tags={editTags}
-              onTagsChange={setEditTags}
-            />
-          </div>
-        </div>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );

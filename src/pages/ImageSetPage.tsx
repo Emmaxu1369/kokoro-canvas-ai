@@ -214,13 +214,13 @@ const ImageSetPage = () => {
       
       <div className="flex h-screen pt-16">
         {/* Fixed Sidebar */}
-        <ImageSetSidebar onImageUpload={handleImageUpload} />
-        
-        {/* Prompt Copilot - positioned after sidebar */}
-        <div className="fixed left-80 top-20 w-80 z-10">
+        <div className="fixed left-0 top-16 h-[calc(100vh-4rem)] w-80 z-40">
+          <ImageSetSidebar onImageUpload={handleImageUpload} />
+          
+          {/* Prompt Copilot - positioned below sidebar */}
           {uploadedImage && (
-            <>
-              <Card className="mb-4 bg-card/50 backdrop-blur-sm border-border/50">
+            <div className="absolute top-full left-0 w-80 mt-4 px-6 space-y-4">
+              <Card className="bg-card/50 backdrop-blur-sm border-border/50">
                 <CardContent className="p-4">
                   <div className="aspect-square bg-muted rounded-lg overflow-hidden mb-2">
                     <img src={uploadedImage} alt="Uploaded reference" className="w-full h-full object-cover" />
@@ -246,7 +246,7 @@ const ImageSetPage = () => {
                 onPromptToTags={handlePromptToTags}
                 generatedTags={copilotTags}
               />
-            </>
+            </div>
           )}
         </div>
         

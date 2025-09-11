@@ -68,7 +68,7 @@ const ImageSetSidebar = ({ className, onImageUpload }: ImageSetSidebarProps) => 
 
   return (
     <div className={cn(
-      "fixed left-0 top-16 h-[calc(100vh-4rem)] bg-card/80 backdrop-blur-sm border-r border-border/50 w-80 z-40 flex flex-col",
+      "h-full bg-card/80 backdrop-blur-sm border-r border-border/50 w-80 flex flex-col",
       className
     )}>
       <div className="flex-1 overflow-y-auto p-6 space-y-6">
