@@ -62,6 +62,24 @@ const FastStartPage = () => {
     setUploadedImage(url);
   };
 
+  const handleImageToStory = (file: File) => {
+    // Mock story generation from image
+    const mockStories = [
+      "A young student sits by the window during a quiet afternoon, lost in thought as sunlight streams through the glass",
+      "Two characters engage in an intense conversation in an empty classroom after school hours",
+      "A magical transformation begins as morning light reveals hidden powers within an ordinary scene",
+      "Friends gather around a table sharing stories and creating memories that will last forever"
+    ];
+    
+    const randomStory = mockStories[Math.floor(Math.random() * mockStories.length)];
+    setStoryText(randomStory);
+    
+    toast({
+      title: "Story generated from image!",
+      description: "Generated a story description based on your reference image.",
+    });
+  };
+
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(true);
@@ -323,17 +341,45 @@ const FastStartPage = () => {
                   </Card>
                 </div>
 
-                {/* Right - Dice Button */}
+                {/* Right - Prompt Copilot */}
                 <div className="lg:col-span-3">
-                  <h3 className="text-lg font-semibold mb-4 text-foreground">Random Prompt</h3>
-                  <Button
-                    onClick={handleDiceClick}
-                    variant="outline"
-                    className="w-full h-48 flex flex-col items-center justify-center gap-4 hover:bg-primary/10 hover:border-primary"
-                  >
-                    <Dice1 className="h-16 w-16 text-primary" />
-                    <span className="text-lg font-medium">Random Story</span>
-                  </Button>
+                  <h3 className="text-lg font-semibold mb-4 text-foreground">Prompt Copilot</h3>
+                  <div className="space-y-4">
+                    {/* Random Story */}
+                    <Button
+                      onClick={handleDiceClick}
+                      variant="outline"
+                      className="w-full h-24 flex flex-col items-center justify-center gap-2 hover:bg-primary/10 hover:border-primary"
+                    >
+                      <span className="text-2xl">🎲</span>
+                      <span className="font-medium">Random Story</span>
+                    </Button>
+                    
+                    {/* Image to Story */}
+                    <Card className="p-4">
+                      <h4 className="text-sm font-medium mb-3 text-foreground">Upload Reference → Story</h4>
+                      <div className="border-2 border-dashed border-border rounded-lg p-4 text-center hover:border-primary/50 transition-colors">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => e.target.files?.[0] && handleImageToStory(e.target.files[0])}
+                          className="hidden"
+                          id="story-image-upload"
+                        />
+                        
+                        <Upload className="h-6 w-6 text-muted-foreground mx-auto mb-2" />
+                        <p className="text-xs text-muted-foreground mb-2">
+                          Upload image to generate story
+                        </p>
+                        <label
+                          htmlFor="story-image-upload"
+                          className="text-primary hover:underline cursor-pointer text-sm"
+                        >
+                          Choose file
+                        </label>
+                      </div>
+                    </Card>
+                  </div>
                 </div>
               </div>
             </div>
