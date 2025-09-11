@@ -9,8 +9,10 @@ import PromptCopilot from "@/components/PromptCopilot";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Plus, Download, Play, ZoomIn, ZoomOut, MoreHorizontal, Edit, ArrowLeft } from "lucide-react";
+import { Plus, Download, Play, ZoomIn, ZoomOut, MoreHorizontal, Edit, ArrowLeft, FileImage, FileText, Share } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import StoryCardModal from "@/components/StoryCardModal";
 
 interface Frame {
   id: string;
@@ -63,6 +65,7 @@ const ImageSetPage = () => {
   // Edit modal state
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editingFrame, setEditingFrame] = useState<any>(null);
+  const [storyCardModalOpen, setStoryCardModalOpen] = useState(false);
 
   const handleFrameSelect = (frameId: string, selected: boolean) => {
     setSelectedFrames(prev => 
@@ -106,8 +109,12 @@ const ImageSetPage = () => {
     setCuts(updatedCuts);
   };
 
-  const handleDownloadAll = () => {
-    console.log("Download all frames");
+  const handleDownloadAll = (format?: 'png' | 'pdf' | 'story-card') => {
+    if (format === 'story-card') {
+      setStoryCardModalOpen(true);
+      return;
+    }
+    console.log(`Download all frames as ${format || 'PNG'}`);
   };
 
   const handleImageUpload = (file: File) => {
@@ -192,8 +199,18 @@ const ImageSetPage = () => {
     console.log("Retry frame", frameId);
   };
 
-  const handleFrameDownload = (frameId: string) => {
-    console.log("Download frame", frameId);
+  const handleFrameDownload = (frameId: string, format?: 'png' | 'pdf' | 'story-card') => {
+    if (format === 'story-card') {
+      // Find the frame and open story card modal with just this frame
+      for (const cut of cuts) {
+        const frame = cut.frames.find(f => f.id === frameId);
+        if (frame && frame.imageUrl) {
+          setStoryCardModalOpen(true);
+          return;
+        }
+      }
+    }
+    console.log(`Download frame ${frameId} as ${format || 'PNG'}`);
   };
 
   const handleFramePreview = (frameId: string) => {
@@ -292,8 +309,14 @@ const ImageSetPage = () => {
                 <Button size="sm" variant="outline" onClick={() => console.log("Replace Tag")}>
                   Replace Tag
                 </Button>
-                <Button size="sm" variant="outline" onClick={() => console.log("Download")}>
-                  Download
+                <Button size="sm" variant="outline" onClick={() => handleDownloadAll('png')}>
+                  PNG
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => handleDownloadAll('pdf')}>
+                  PDF
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => handleDownloadAll('story-card')}>
+                  Story Card
                 </Button>
                 <Button size="sm" variant="outline" onClick={() => console.log("Share")}>
                   Share
@@ -377,9 +400,21 @@ const ImageSetPage = () => {
                             </button>
                             <button 
                               className="w-full px-3 py-1.5 text-left text-sm hover:bg-muted transition-colors"
-                              onClick={() => handleFrameDownload(frame.id)}
+                              onClick={() => handleFrameDownload(frame.id, 'png')}
                             >
-                              Download
+                              Download PNG
+                            </button>
+                            <button 
+                              className="w-full px-3 py-1.5 text-left text-sm hover:bg-muted transition-colors"
+                              onClick={() => handleFrameDownload(frame.id, 'pdf')}
+                            >
+                              Download PDF
+                            </button>
+                            <button 
+                              className="w-full px-3 py-1.5 text-left text-sm hover:bg-muted transition-colors"
+                              onClick={() => handleFrameDownload(frame.id, 'story-card')}
+                            >
+                              Story Card
                             </button>
                             <button 
                               className="w-full px-3 py-1.5 text-left text-sm hover:bg-muted transition-colors"
@@ -465,6 +500,12 @@ const ImageSetPage = () => {
         currentImage={editingFrame?.imageUrl}
         tags={editingFrame?.tags}
         prompt={`Edit ${editingFrame?.title}`}
+      />
+      {/* Story Card Modal */}
+      <StoryCardModal
+        isOpen={storyCardModalOpen}
+        onClose={() => setStoryCardModalOpen(false)}
+        selectedImages={cuts.flatMap(cut => cut.frames.filter(frame => frame.isGenerated && frame.imageUrl).map(f => f.imageUrl!))}
       />
     </div>
   );

@@ -17,9 +17,14 @@ import {
   Settings,
   Grid3X3,
   History,
-  Upload
+  Upload,
+  FileImage,
+  FileText,
+  Share
 } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import StoryCardModal from "@/components/StoryCardModal";
 
 const FastStartPage = () => {
   const navigate = useNavigate();
@@ -146,14 +151,22 @@ const FastStartPage = () => {
     handleGenerate();
   };
 
-  const handleExport = () => {
+  const [exportModalOpen, setExportModalOpen] = useState(false);
+  const [storyCardModalOpen, setStoryCardModalOpen] = useState(false);
+
+  const handleExport = (format?: 'png' | 'pdf' | 'story-card') => {
+    if (format === 'story-card') {
+      setStoryCardModalOpen(true);
+      return;
+    }
+
     const imagesToExport = selectedImages.size > 0 
       ? Array.from(selectedImages).map(i => generatedImages[i])
       : generatedImages;
     
     toast({
       title: "Export started",
-      description: `Exporting ${imagesToExport.length} image(s)...`,
+      description: `Exporting ${imagesToExport.length} image(s) as ${format || 'PNG'}...`,
     });
   };
 
@@ -222,7 +235,7 @@ const FastStartPage = () => {
                       <div className="h-full flex flex-col items-center justify-center">
                         <Upload className="h-8 w-8 text-muted-foreground mb-2" />
                         <p className="text-sm text-muted-foreground mb-2">
-                          Drag & drop image here
+                          Upload your image or story card
                         </p>
                         <label
                           htmlFor="image-upload"
@@ -369,7 +382,7 @@ const FastStartPage = () => {
                         
                         <Upload className="h-6 w-6 text-muted-foreground mx-auto mb-2" />
                         <p className="text-xs text-muted-foreground mb-2">
-                          Upload image to generate story
+                          Upload your image or story card
                         </p>
                         <label
                           htmlFor="story-image-upload"
@@ -401,14 +414,31 @@ const FastStartPage = () => {
                     className="w-24"
                   />
                 </div>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={handleExport}
-                  disabled={generatedImages.length === 0}
-                >
-                  <Download className="h-4 w-4" />
-                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      disabled={generatedImages.length === 0}
+                    >
+                      <Download className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => handleExport('png')}>
+                      <FileImage className="mr-2 h-4 w-4" />
+                      Download PNG
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleExport('pdf')}>
+                      <FileText className="mr-2 h-4 w-4" />
+                      Download PDF
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleExport('story-card')}>
+                      <Share className="mr-2 h-4 w-4" />
+                      Story Card
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
                 <Button
                   variant="outline"
                   size="icon"
@@ -489,6 +519,15 @@ const FastStartPage = () => {
           </div>
         </div>
       </div>
+      {/* Story Card Modal */}
+      <StoryCardModal
+        isOpen={storyCardModalOpen}
+        onClose={() => setStoryCardModalOpen(false)}
+        selectedImages={selectedImages.size > 0 
+          ? Array.from(selectedImages).map(i => generatedImages[i])
+          : generatedImages
+        }
+      />
     </SidebarProvider>
   );
 };

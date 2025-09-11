@@ -137,7 +137,7 @@ const ImageSetSidebar = ({ className, onImageUpload, imageTags = [] }: ImageSetS
                   alt="Uploaded"
                   className="max-w-full max-h-32 mx-auto rounded-lg"
                 />
-                <p className="text-xs text-muted-foreground">Image uploaded</p>
+                <p className="text-xs text-muted-foreground">Upload your image or story card</p>
               </div>
             ) : (
               <div className="space-y-3">
@@ -181,7 +181,7 @@ const ImageSetSidebar = ({ className, onImageUpload, imageTags = [] }: ImageSetS
                   alt="Reference"
                   className="max-w-full max-h-32 mx-auto rounded-lg"
                 />
-                <p className="text-xs text-muted-foreground">Reference image uploaded</p>
+                <p className="text-xs text-muted-foreground">Upload your image or story card</p>
               </div>
             ) : (
               <div className="space-y-3">
