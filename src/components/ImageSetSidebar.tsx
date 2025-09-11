@@ -10,9 +10,10 @@ import { cn } from "@/lib/utils";
 interface ImageSetSidebarProps {
   className?: string;
   onImageUpload?: (file: File) => void;
+  imageTags?: string[];
 }
 
-const ImageSetSidebar = ({ className, onImageUpload }: ImageSetSidebarProps) => {
+const ImageSetSidebar = ({ className, onImageUpload, imageTags = [] }: ImageSetSidebarProps) => {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [settings, setSettings] = useState({
     size: "1024x1024",
@@ -32,6 +33,10 @@ const ImageSetSidebar = ({ className, onImageUpload }: ImageSetSidebarProps) => 
       setUploadedImage(url);
       onImageUpload?.(file);
     }
+  };
+
+  const handleGenerateImageTags = () => {
+    console.log("Generate tags from uploaded image");
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -123,6 +128,40 @@ const ImageSetSidebar = ({ className, onImageUpload }: ImageSetSidebarProps) => 
             )}
           </div>
         </div>
+
+        {/* Reference Image to Tags */}
+        {uploadedImage && (
+          <div className="space-y-3 p-4 bg-card/30 rounded-lg border border-border/50">
+            <div className="flex items-center justify-between">
+              <Label className="text-sm font-medium">Image to Tags</Label>
+              <Button 
+                size="sm" 
+                onClick={handleGenerateImageTags}
+                className="h-7 px-3 text-xs"
+              >
+                Generate Tags
+              </Button>
+            </div>
+            
+            {imageTags.length > 0 && (
+              <div>
+                <p className="text-xs text-muted-foreground mb-2">Generated Tags:</p>
+                <div className="flex flex-wrap gap-1">
+                  {imageTags.map((tag, index) => (
+                    <span 
+                      key={index}
+                      draggable
+                      onDragStart={(e) => e.dataTransfer.setData('text/plain', tag)}
+                      className="px-2 py-1 bg-primary/20 text-primary text-xs rounded cursor-move hover:bg-primary/30 transition-colors select-none"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Image Size */}
         <div className="space-y-2">

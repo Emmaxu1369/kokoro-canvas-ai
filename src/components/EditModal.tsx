@@ -7,7 +7,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import TagArea from "./TagArea";
 import PromptCopilot from "./PromptCopilot";
 import HistoryRecords from "./HistoryRecords";
-import EditSidebar from "./EditSidebar";
 
 interface EditHistory {
   id: string;
@@ -69,12 +68,9 @@ const EditModal = ({
         
         <ScrollArea className="flex-1 px-4 pb-4">
           <div className="flex gap-4 min-h-[calc(90vh-80px)]">
-            {/* Left - Edit Sidebar */}
+            {/* Left - History Sidebar */}
             <div className="w-64 flex-shrink-0">
-              <EditSidebar 
-                onImageUpload={handleCopilotImageUpload}
-                onTagGenerated={(tags) => setCopilotTags(tags)}
-              />
+              <HistoryRecords />
             </div>
 
             {/* Center - Image and Controls */}

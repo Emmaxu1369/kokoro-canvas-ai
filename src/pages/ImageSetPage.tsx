@@ -215,7 +215,10 @@ const ImageSetPage = () => {
       <div className="flex h-screen pt-16">
         {/* Fixed Sidebar */}
         <div className="fixed left-0 top-16 h-[calc(100vh-4rem)] w-80 z-40">
-          <ImageSetSidebar onImageUpload={handleImageUpload} />
+        <ImageSetSidebar 
+          onImageUpload={handleImageUpload} 
+          imageTags={imageTags}
+        />
           
           {/* Prompt Copilot - positioned below sidebar */}
           {uploadedImage && (
